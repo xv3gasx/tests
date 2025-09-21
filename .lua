@@ -43,7 +43,7 @@ end
 local Section = Tab:Section({ 
     Title = "Player ESP",
     TextXAlignment = "Left",
-    TextSize = 35, -- Default Size
+    TextSize = 20, -- Default Size
 })
 
 local ESP = {}

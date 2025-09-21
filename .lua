@@ -27,9 +27,9 @@ local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
 local Section = Tab:Section({ 
-    Title = "Player ESP",
+    Title = "Section",
     TextXAlignment = "Left",
-    TextSize = 50, -- Default Size
+    TextSize = 17, -- Default Size
 })
 
 _G.ESPEnabled = false

@@ -5,7 +5,7 @@ local Window = WindUI:CreateWindow({
     Author = "by: x.v3gas.x",
     Theme = "Dark",
     Size = UDim2.fromOffset(660, 430),
-    Folder = "GUI
+    Folder = "GUÄ°",
 })
 
 Window:EditOpenButton({
@@ -197,87 +197,3 @@ local Toggle = Tab:Toggle({
         _G.ESPEnabled = state
     end
 })
-
-_G.GunDropEspEnabled = false
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
-local LocalPlayer = Players.LocalPlayer
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TP_ESP_UI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-
-local TPBtn = Instance.new("TextButton")
-TPBtn.Size = UDim2.new(0,160,0,30)
-TPBtn.Position = UDim2.new(1,-170,0,50)
-TPBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
-TPBtn.TextColor3 = Color3.fromRGB(255,255,255)
-TPBtn.Text = "GunDrop Ara & TP"
-TPBtn.Font = Enum.Font.SourceSansBold
-TPBtn.TextSize = 18
-TPBtn.Parent = ScreenGui
-
-local function getRainbowColor()
-    local t = tick() % 5
-    local r = math.abs(math.sin(t * math.pi))
-    local g = math.abs(math.sin(t * math.pi + 2))
-    local b = math.abs(math.sin(t * math.pi + 4))
-    return Color3.new(r,g,b)
-end
-
-local line = Drawing.new("Line")
-line.Thickness = 2
-line.Visible = false
-
-local box = Drawing.new("Square")
-box.Thickness = 2
-box.Filled = false
-box.Visible = false
-
-local function findGunDrop()
-    for _,obj in pairs(workspace:GetDescendants()) do
-        if obj.Name == "GunDrop" and obj:IsA("BasePart") then
-            return obj
-        end
-    end
-    return nil
-end
-
-local function teleportToGun()
-    local char = LocalPlayer.Character
-    local hrp = char and char:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    local gun = findGunDrop()
-    if gun then
-        hrp.CFrame = gun.CFrame + Vector3.new(0,3,0)
-    end
-end
-
-TPBtn.MouseButton1Click:Connect(teleportToGun)
-
-RunService.RenderStepped:Connect(function()
-    local gun = findGunDrop()
-    if gun then
-        local gunPos, onScreen = Camera:WorldToViewportPoint(gun.Position)
-        if onScreen then
-            local rgb = getRainbowColor()
-            line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
-            line.To = Vector2.new(gunPos.X, gunPos.Y)
-            line.Color = rgb
-            line.Visible = true
-            box.Position = Vector2.new(gunPos.X - 10, gunPos.Y - 10)
-            box.Size = Vector2.new(20,20)
-            box.Color = rgb
-            box.Visible = true
-        else
-            line.Visible = false
-            box.Visible = false
-        end
-    else
-        line.Visible = false
-        box.Visible = false
-    end
-end)

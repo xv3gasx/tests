@@ -216,12 +216,6 @@ local function drawPlayerESP(player, data)
     end
 end
 
-local Section = Tab:Gun ESP({ 
-    Title = "Player ESP
-    TextXAlignment = "Left",
-    TextSize = 50 -- Default Size
-})
-
 RunService.RenderStepped:Connect(function()
     if _G.GunESPEnabled and currentGun and currentGun:IsA("BasePart") then
         local gunPos, onScreen = Camera:WorldToViewportPoint(currentGun.Position)

@@ -26,10 +26,10 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
-local Section = Tab:Player ESP({ 
-    Title = "Player ESP
+local Section = Tab:Section({ 
+    Title = "Player ESP",
     TextXAlignment = "Left",
-    TextSize = 50 -- Default Size
+    TextSize = 50, -- Default Size
 })
 
 _G.ESPEnabled = false

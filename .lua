@@ -27,9 +27,9 @@ local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
 local Section = Tab:Section({ 
-    Title = "Section",
+    Title = "Player ESP
     TextXAlignment = "Left",
-    TextSize = 17, -- Default Size
+    TextSize = 50 -- Default Size
 })
 
 _G.ESPEnabled = false
@@ -215,6 +215,12 @@ local function drawPlayerESP(player, data)
         data.NameTag.Visible = false
     end
 end
+
+local Section = Tab:Section({ 
+    Title = "Gun ESP
+    TextXAlignment = "Left",
+    TextSize = 50 -- Default Size
+})
 
 RunService.RenderStepped:Connect(function()
     if _G.GunESPEnabled and currentGun and currentGun:IsA("BasePart") then

@@ -26,7 +26,7 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
-local Section = Tab:Section({ 
+local Section = Tab:Player ESP({ 
     Title = "Player ESP
     TextXAlignment = "Left",
     TextSize = 50 -- Default Size
@@ -215,6 +215,12 @@ local function drawPlayerESP(player, data)
         data.NameTag.Visible = false
     end
 end
+
+local Section = Tab:Gun ESP({ 
+    Title = "Player ESP
+    TextXAlignment = "Left",
+    TextSize = 50 -- Default Size
+})
 
 RunService.RenderStepped:Connect(function()
     if _G.GunESPEnabled and currentGun and currentGun:IsA("BasePart") then

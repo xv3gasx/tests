@@ -26,12 +26,6 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
-local Section = Tab:Section({ 
-    Title = "Section",
-    TextXAlignment = "Left",
-    TextSize = 17, -- Default Size
-})
-
 _G.ESPEnabled = false
 _G.GunESPEnabled = false
 
@@ -45,6 +39,12 @@ local function WorldToScreen(pos)
     local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
     return Vector2.new(screenPos.X, screenPos.Y), onScreen, screenPos.Z
 end
+
+local Section = Tab:Section({ 
+    Title = "Player ESP",
+    TextXAlignment = "Left",
+    TextSize = 50, -- Default Size
+})
 
 local ESP = {}
 

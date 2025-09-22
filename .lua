@@ -1,1 +1,273 @@
-([[This file was protected with MoonSec V3]]):gsub('.+', (function(a) _ccrmJbeiIcDH = a; end)); xnaVmdXSFGCYGbxe=_ENV;dkODhLqeFlhVOPu='4dQ9{!OlUHteD}%fH9!DUteU%HdD{QlTH%DtdD!DUUDl%td%{e9flOHUDOf{QZOfeH}DQQ9Dlll{D!f9QQ{f{}UltO}{XQQ%UdD;AdQe9}!{t}}UA{9HOOUDD9fl%!Qt9%ODHtDOdQOQH3e}}cdu9DOOUU}lN9QU!eUQeDefB%9lO!H{DeDDQ}!eUllltt}#f%QD!UHffHQl!d!OtQ}fD}fDQO!{UQQ{!llDHfOeHDD{fQQG{DU%%Ud9{{l!O!H%e%%Ddt{OUD%Ubfd{!FleH%f!dO{!l}t{}dDf1HQU!OU{d!!HU{H%ee}D9HO%l!D9}!QQ{{OlH}OlHfD&%%dD{UUt%{d!9fO{Hft}%tde{%UUe{t9}!fDQt!UU{DHdt{elHtMD}Ded%Q{!QUgtDff{dl/tUU9flQU!HU&OH%%vO{OQdHfDfftQ}{DlUel}O89%}lQHQDe%}}9Q%l%tD}H%DQD!U{9tleQ%dd99tOUHODQd!!%U{eQ%!?DNH9eOQH/e%!QUHet}e,!9!OU9dOdUteU%OdQO{tU%l#(ftQU!OU{eQ%rW%ODttHeDtf{QQ!x%aQ!{%O}9HldHQDP%%dt!DeH}t>{{!O{U{D{flde!{Utl!t!D%fDQt!OeD%{d%{{9%ODHtDUfOQ{!Q}H%%}fd{9UOOH{Dvr%!}UselHlfQ9UOft{HdDj%tdU{OlQeOfQd}QfOQUUeO%{dnOQt!}3Xe9^!eUHU!eO}%&D9tOOeHfD9!!eUQlfeU}UwO9{O^e%f8d%!eU{Uf}!vO9U{OU%H}Df%Od{{Ql1H%DDft9CHOUlee%a-%9DOUttfOQf!}Udt%}%d{We{dO{HQDK%D9Ql%eeDU3U{9l!HOe%%%%eQQ{{lQt8DDdlOUUteO%fPd{eO%e{D%>HfHQf!QUgt%}tQHl9HO}DfO9d(}OCHDDl}Hy%9QOKU%et91!OUlt%%{gfQ%!%U%UeeD%{dQ{cODefSdQDOQUUU!eO}%5D9tOO}!Y!Qt!}Hdlfed}UoO9{O-t!fDQl{}lDeltl}}YRQ%!DUU}HQt!dO{t{}fdd9Q!tUtUleU%*^%9D}}wD9U!}HZelUde9}txU9OOQt}f%QA!Ol%tetH}f.Q9N!%UtD%St9!!Utf}-ff9l!%UeUHee%Qdy9%Ote=GD99d9l!Hfed%l>t9UOOHQ%+Q}!HH{HO%OTl9DO}H{HdD(%tdU{O}l_t9dljQfOQUUeO%{d1!9tQ}dft9DOdHlU!e9}%RD9tOOD{}tf!Qt{%lDtt}OdHl!HQDOf{dD{eU9ttt{}Q?*Q%!DUt!UOt!{{!ltH%DDftQOlHee%tdQ{UlHH%}t8Ufl9_!Il%tD}Udtl{Hf}&ydd2!#UteD}tdd9{O{OdtOet%UdO{QU%%{(fQf!%HHetf!}dQDUOt%}}fD9lOD{dUdH}f%9DlHH%}9/!f9QO{DlttU}{dOl=H}DefmdD!e{HletQ}Jf%QtOtDDfHde!/UdldtDDtfUQO!Qt{f9df{tl{HDeHfeQt!QUUeH}%dt{U9lOeH>e%%DdUO{et%!Y!9{OfHuDeeefdd{{QlsHDfD9HOl!QDt%td}{dltexHeDef{QQ!qfQ5}9Dl{HeOlHtDs%%dD{UU%%tddfd{{UvteeD%UdH{DlQtiD%ft{fHMDU%Dd9{elQOftUDUfOQ{!EHQfQd}{eODt9}l}{Q)!tUAee}U}HVU9QOvU%etA}{Ulll{tQ}Tf%QD!tUUtOQ9dQ{0O%HDDtfUwOD%DQe9%%-D9tOUH{ftQ2!HH9tQ%Dft{flOl!e>%f9dOQltlHtH}Q==Q%!ttQ%tQ{!d{!lfH%DDftQOl!ef%QQU{Ql}UeDD&Q9QOlUUee%Q}}Cf9OO{HQe%ffONU}ee%{dd5!9%!%UDet%O{lUDleUfd!fHOf!teD%{Q{v}U!OfHfDUfOQ{!0He%Qdd{}9eOHH{DQfyHdDd}DtU}Ov{9QO:U%eD%tdU{HlHtQ}Jf%Qtl!Dzf9dUd!{HO%HDDtfO9%Hdef%%dV{:llteHHDffQQB{%lt}fdH{{lxUBD!f9Q%{%UelHtH}QF?Q%!tD}%UQU{%{!l!H%DDftQOOHe{f9dtdd{LOtHUDOfQ9OHQe}tf%Q/U9OO{HcfDQD!HUQee%{d!x!9e!%UDet%O!dUQtQ}9dW9fOeHpD9%t%!dH9%ODHtDO9HOQH{D9%fd{{lO%OUH!D!fld%{DlttO%eRe9tldUfD{%}df{Ol{tQD%diOtH!DOfl%Od!{OO%HDDtfOO!U{etfdQvnf{QOUHOD{fm!!Ufet%O%f9tleO!H{e%%Ddt{Oe9}UdU<*Q%!DUteU%Od{{QeFtd}9ftQU!OUQDlf!c}!dlTtHDH9eQQ!Gl%ttdd{elHt9}{DH%DdtUTeb%Hke{OOd!ee%fUQ{d{!He0}%ddQDOiUDDUfUQ{J%O{t{}lfedt9D!5Dd%Qdl9%OUtUDU_{%%!HlDe}}DdU{l93H9DDcQQl!9U{t{}!D%9t!DHQD!e9df!OlNO%HDDtfUQO!{XQfdd%/f{OOUHOD{fB9OlQT%fDUH!!tdf{%d{fOed}{%lOt{}Qf%!QOfDQf{%ldl{tlsH%DDfU!}HlDQ%%sdQ{{}O}tdDOf{QQ{%td%bQd{e!UHD}ef{fdQ{{tlUtO}QdOO}U%e}f!dD{H{lltt3D%fDQUllDd%{Qt{{lft%H}}lfOQ{!Ql%DQYf{QleU{}9fOQ}QfHEe}%ed{{d9!OOU%eD%tdOUUe9}QdO9eQfO!UUeO%{dp!OtQ}f%H99!OHDeOfdQTZf{dOUHOD{fu{QU%DX}tdH9t9ll+H,e%%DdUOHtt%d3!9{Ofl%D}%DQ!!9lOt9td}dftQU!OUQ}Of9{OlUOtHUDOf{QQ!B!%dedt{l9lO{HQ}QOfdD{tlUtf}{?Q9zO{Hdet%UdO{UlQtdD%f}Qt!DPde{%Qd8{QODHeDUftHf!QU-t%aDxt9HOOH{!Qf?d%{DlttU}Ox{9QU9U%e}%tdU{Ol{tQ}kd!QD!tUUeO%{d9{gU%d{DtfUQO!{UQ%D}%d%O9OUHlD{9lQI{%lDeD%9vO9OOQHHe%%Ddt{%UOt{}!-^Qf!DUeeU%ld{{QDdH%DDftQH!OU{eQ%J!{9DODHUDUf{Q9!FH_e9}t,t9OOtHQDX%%Q%!tlUtH}{QO9S!%UD}t%}dO{llQt9D%{oQtOtUte{%Odal{ODHtDUdO9U!QU{t%%;wt{OOOtODUfkQ9{DH%tU}O>{!Q}UU%Dd%td}{OH}tQ%QQUQDOZUU}t%{dQ{=U%H}Dtf%QO!tUQDd}%JD{tOUH}D{fQQ/{%lDeD}HqO9DOQ}!e%%Ddt!tUQt{}e(bH9!DUteUfUQd{QltH%ZUftQU!OUUe%%bdO9DUeHUDlf{QQlll%eU}tw}9OO{HQDN{!dD!llUed}{)Q9y!%Hfetf{dO{OlQtQD%fD{l!UU}e{%}d,{tODHt}9fOQe!QUDt%%lJt9D99H{Dtf39H{DletU}OQ99QOUU%D{%tdU{OlteQ}(iOQD!}UUel%{dU{,O%%}DtfUQO!OUQe_}%SDUeOUHOD{fOQ-{%lDttQHZO9{OQHUe%%Ddt{UDlt{}Q539d!DUteU%OO!{Ql0H%}9ftQU!OU{m9%7K%9DOeHUDOf{QQfUl%e!}td09OO{HQDK:{dD!{lUtO}{ZQ9n!%tOetfddO{OlQtQD%fD{9!UUOe{%ed_9%ODHt}>fOQ{!QUQt%}D&t9UODH{DQfEd%{DlttU}ty%9QOBU%ft%edH{OUO99} f%QDHUUUeO%{9QljO%HDDtfUQOHvUQDQfQWD9tOU%{D{fQQ*O#HHtt}U/OlQOQHNe%2Ddf{UlOt{}QyIU9!DHDDD%Od{{QHdH%DDftQUO}U{eQ%&if9DOtHU}UnaQQ!+l%eo}tIU9OlOQ9D^%%dDO9lUtO}{QU}d!%UDetQ{dO{!lQtDD%qnt!!UUOe{d%dg9fODHt!efOQ{!QUdt%}D7t{tflH{DQfvOe{DlttU%UeS9QOdU%Df%tdU{OH{ef}_ffQD!eUUee%{Q{{9O%HfDt{fQO!{UQei%e+D9eOUHHD{fQQk{%Uftt}UCO9{OQHQe%%Dde{UlOt{}9hv92!DttDD%Od!{QlhH%}%ftQU%OU{e!%-c%9DOfHUfOI!QQ!9l%D{}t9U9OH{HtDofddDlDlU%U}{9Q{U!%UfetuUdOU%lQeQ%QfDQ%!U%re{%Qdo!%U_HtDDfOQU!QDUt%%%d!9UOeH{%ff5d%{DUDe!}Obt9QH}U%eD%tdUtHl{tO}P^{QD!DUUDO9HdQ{9O%teDtfDQOU{UHe+%dkD!DOU%fD{fQQO{%l}tt}e7O9OOQe:}O%DdD{Ullt{9dNsQ%OQUteD%Od{{QlUH%fDNOQU!tU{Dt%3Q99DHteQDOfUQQUfl%fU}tdtOlO{HlDg!QdD{tlUDO%QMQ9!!%Hdet9DdO!Oyet0}{fDOf!UUOe{f{dU9%l9Ht}UfOQ{!QU)el}Dyf9UO}H{D{fMQ%!UlttD}O2%9QO!U%%DftdU{tl{}!}R!9QDODeHeO%HdQOfO%HDDtdU{9!{Uleb%9#DU%OUtU}dfQQO{%D}tt}UwO!{leH^D{%DQ.{UDHt{%{LfQ%O9Ut:%%Od{{QlheeDD aQU!UU{e{%AQ>{9OtHfDO{!QQ!Bl%DD%fpU9}O{HHD_{ddD!DU9tO}D_QU_!%UDet%UUD{{lHt:}OfDQt!UUO:D%Qd!9%ODHtDtfO9{O!UVeQ}Ddd9UOeH{fQffd%!glt},}O9D9QH;HDeD%%dUt9l{fd}VQ%9O!tUDeOd dQUfO%HD}%fUQU!{UOe;}frD!tU!HODOfQQd{%eltt}UHO9{OOHie%%Dd}{UtO!d}QI{Q%l{Utn9%O{{!Ol1tQDD9HQUUeU{%QfDE%{uOte}DOQDQQ!hUDtD}DBU9tO{H{DYb df{tletO%l=Q9M!%tDef%UdH{{l!tw%tfD9DOHUOeH%QO%9%ODHtDU!HQ{!!UNe9}DMD9UlUH%DQf{d%!flttU}OQ{{DO HQeD%%dUOQl{e{}Qf%9Q!tteeO%{dQ{7lDHDD%fUQD!{U{ewfAQ99tO}HO%9fQQI{%HDe!}UEe9{OlHrfU%D9t!OlOtt}Q:9Q%lHUtDtlld{{HloDHDDftQUUO%DeQ%l^%OQOt}vDOuO9d!WU!tD<!TU9OO{DQDd%%Q9{tU+tO,DbQ9Qf+UDDd%UdD{{lQt+}{ADQtOgUOeU%Qdd9%O}HtDU{lQ{!QUye9}D?t9UUOQeDQfHd%{%lttH}Om{9{OKHHeD%tdU{Hl{}Q}}f%9l!ttkeOYQdQl_llHD}!fUQH!{D!eqj%dQ9tl9HOQLfQlU{%lDtf}UFf9{O}HjD %DdtO{lOt%}QF_Q%!DUteUlOd{{}lvH%DDf}QUOUd9eQ%DV%U}OtHUDOd{Q!!^UttD%OcUHdO{t{DH%%QH{t}}tO}{WQ{QlHUDDU%U!e{{lQt)%NddQtOlUOfH%Qd(9%ODeODU6QQ{OdUheG}Ddt9DOOHfDQQ{d%!UltetO!<{9%Ok}feD%tdUOOU{tQ}Df%9U!t%9eOfOQt{*leHDxffUQO!{H{el}%dt9tt}HOD{fQ9QO{lDeH}UOe9{OQHve%.ldt!{lOe9}Q7QQ%ODHOeUfdd{!HlMttDD.Del!OHmeQ9do%9DOteU%,f{Q%!oUttD9!BU{UlqHQD}%%Od{tlUtO%Odd96ODUDdf%UdO{{U{eDD%IeQtH}UOe{%Qd={DODtODUA!Q{!{Uue%%D<t{9OO}eDQfDd%{D*ttU%Q>{9QOSHdeDfDtl{OUdtQQdf%QD!ttUDd%{df{_leHDQ!fU9UO%UQe%}%ld9tOUHO}Of%Q1!}lD%f}UWO9{l{H{e%fDdtU}lOt{}QiT9D!DHleUfOd{{{lTt%%Uft9{!OeUeQ%}<%{%fHHU}9f{l9!zl%tDftgf9OldHQD}%%ll{tUtet}{dB9Jt9UDet%UQU!DlQtfD%{dQt!UUODOfddZ{%ODffDUfOQ{!QUdt%%Hjt{UOOHODQ<yQe{DUOtU%}C{9fOytg{e%tQ!{OD!tQ}Cf%{Dl9UUD9%{df{EDHHD}DyDQOOQUQf!}%MD9tltHtD{KdQBe9lDtt}UdU!aOQt^e%9ddt{UlOt{%%o;9e!DHteU%Ud{!QUYH%}UftOf!OHdeQ%7H%9DllHUDOf{Q!!XH29e}tdO9Oe!HQDz%%9D!tlUe{}{ds9AeHUDDDfxdO!9lQP!D%fDQtOtHHe{fQd>!QODHtDUjU9!!QHdt%fTIt9UOOH{}!f*QD{DUetU}UB{{QO{U%DH%t{D{OUQtQ%QU}QDOUUUKl%{dQ{qU%H%DtIOQOOQUQ=e}%d%!dOUt!D{GOQB{%lDeD}f:O{{OQt{e%%Ddt!tUet{%90CH9!DUteU%OQd{Ql%H%}}ftQt!OH{D{%kde9DUdHU}{f{9{}fl%et}t!H9OO{HQ%YfedD!UlUe{}{!}9Wl0HDetfldOUHlQtYD%^%9D!UHOe{{ld#9%ODtD}lfO9!!QD!t%}DMt9UOeH{}hf.Qf{DlDtU%OdU9QO}U%_9%tQO{Ol{9Q}u2DQD!tUUeH%{Q{DfO%teDt{HQO!{UQ}L%QsD{HOUt!D{{}Q,OaUHtt%U)OHHOQHwe%f%Qd{UUlt{dlj2Q%!DHD}9%OQO{Qe!H%DDftQUl9U{Dd%uQ,9DODHU}Og1QQ!%l%%0}tdl9OlOQdDJf}dDHelUtO}{QQ{O!%HeetfldOHflQeQ}tfD9t!UDee{%Qd(!<O}Ht}HfOOH!QUXt%%%dt9UlUH{Qlfsd%{DltD!}Od99QlQU%e%%tQU{Dl{eL}6d!QDOHUUDUl9dQ{fO%%}DtfUQOl{H{e %}/D{HOUfdD{_{9l{%UDttd}-O9{OQtQD%%DQe{Ueet{}QS_{+l!UtDt%O!H{Ql1H%DDd9QUO!U{D{%Kdo9DltHeDOJQQQHll%ee}t2tDUO{tdDPfOdD{tlUtD%{IQ{S!%HOet%HdO{llQtidffDQt!UUDe{%Qd*9%e}HtDUfOQ%!QUht%}D!e9UOOH{DHf-d%{DU=eU}Od!9QOHU%e}%tdH{Ol{f9}^f%QDO{UUeO%{9QtfO%t%DtfeQO!OUQ}AfU5D{DOUtUD{Q9QL{%t9tt%DwO{{OQH e%%DH9{UUUt{%OYiQf!DttQl%OQO{Ql9H%6Dft{UO%U{D{%/QZ9DHeHUDOdeQQO{l%e}}tXU9OO{zeD83_dD!%lUtl}{d{{}!%H%et9tdO{{lQDR%OfD9}!UUHe{{9d69%l{Ht}efO9U!QUMt%}Ddl9UlUH{DQf:9Q{Dl%t}}Ov{9Q!HU%e}%tdUO}l{eH}kI%QD!tUUeOQUdQ!UO%eQDtfUQO!{H;enf!kD9DOUHlD{fU!{{%U%ttD%LO9!OQHQe%fLH!{UlOt{DU,ZQf!DUt}f%OQO{QllH%DDft9tdfU{D!%2!{9DOtHUDOb}QQO{l%tD}tEt9OH{t%DNzQdDlUlUDb}{9Q9D!%t?etQddOlDlQtz%lfD9D!UHte{%{d?9%lUHt}efOQe!QUAt%%%d%9UltH{Q{fbd%{Dlt9U}OdH9QOFU%ef%t{U%Ql{el}.QDQDHOUU%OftdQ!!O%tlDt9?QOU{UleFf9<Dl9OUD%D{fQQt{%Uftt%}MO9OOQHnDt%DQ%{UUtt{}QR*9?%%UtD}%OdH{Ql/H%}%QeQUODU{fe%J#%9DUtH%DOTtQQOOl%LD}tq%{OO{tHD7f!dD{elUtU}{wQUd!%UDetfDdO{{lQt#dffDQt!UHee{%QdY9%e9Ht}%fOQO!QUdt%}%HD9UlDH{Dff:d%{DUkeU}Ode9QOfU%e}%tde{Ol{f9}Tf%QDO+UUeO%{dQHdO%HDDtjDQO!{UQeoQfXD9tOUteD{fQQ&!{UDttfV O9{OQHde%f9dt{UDlt{}Qwc9}!DUteU%OO!{Ql8H%}HftQU!OU{F9%/a%9DlQHUDOf{QQtdl%tD}td99OO{HQD^9fdD{tlUte}{nQ9Y!%}}et%UdO!KlQtqD%fDle!UUOe{f5d69%ODet9lfO9}!QU{t%9f*t!Ul9H{}efk9l{DtetU}Dd{9QleU%e%%tdH{OletQ}={fQD!tUUDt%{dQ{KO%%}DtfUQO!HUQep}%(DUeOUHOD{hUQC{%lDttQHuO9{OQtQe%%Ddt{UDlt{}Q=q{d!DUteU%OO!{QlWH%}OftQU!OU{x9%Y;%9DUQHUDOf{QQDQl%D!}tQ99OO!HQ%xMOdDO9lUtU}{5f9Z!%t9et&9dO{{lQt9D%QDQD!Utde{ftd#!{ODDt}efO9f!Qttt%d{At9tfUH{}%fRQD{DlttU%OUH9QleU%}l%t9{{Ol{e{}EdlQDl!UUeU%{9Q{{O%eODtftQOOdUQez%OVD!OOUHOD{f!Qol%H!ttf{vO{DOQDle%dD{}{UHQt{fDMVOO!DUD{t%O9d{QleH%DDft9U}eU{D%%vQH9DUlHUDOf%QQOtl%DU}tvt9OU{HlD#yHdD{DlU%l}{SQ9{!%tHet%UdO{OlQ}L%mfD{l!UH%e{VHdW{{lDHt%OfO9;!QUdt%}}mt9UelH{DQfx9!{DlttU%Od,9Ql}U%}l%t9O{Ol{eD}LdHQDllUUeU%{dQ!dO%HDDtfUQO!{UQe;ldrD9tOUHlD{fQQR!%lDtt}UQ}9{OQH)Ddf+dt{UlOtQ3Q9dl+!fH9eU%Od{{TUf}DP%9QOeU%DQ%f%gi%9DOtHUDOf{QQHhl%tD}t/U9OO{HQD{Q%dD{tlUtO}{nQ9p!%UDe}fQdO{{lQH%%!9{OJUfDd%DdU{lUdOft{DUfOQ{!SH!%Odl{!{tt{Df#,9dQd!{lttU}OLQ{OH}e%%}Q!{DlHllt{}Tf%QD!UtfeHf!dQ{+O%Ht%d9DOQU{ef%%dO9f!etO}{Lldd!uUfeft}}e#O9{OQU%%dQtd}{DlOt{}Qf%OeHT}.et%ldl{tl3H%DDfU{}UteOf!d%{f9%O}t9DOf{QQ{%HQD%fHdDl9H{D9feQQ{f{}UdtO}{CQQ%lODHflQO{UlUtf%9}dX{Qt!UUOeQff{blttJe}fUQDQl!HUCt%}D<U{fHtD{f}99!!{flftU}OR{9yllDQ%Dd}de{tl{tQ}pfD9}HUDfeH%OdQ{bO%HtfQfeQ%!{UQeS}D9dlQttD%f!Q}!{!dU!tt}UCO9QlH}{ftdD!lUOt%}l}!#!Q%!DUteOfe!!U>tDtd}dftQU!OUQ%%d_!dl9O}H%DOf{QQ{%HZ%td!{OllOlHlD:%%dD{UHt}%d}9O99O}UDet%Ud{!Htt}}zdddOQHHDUflf{{llOtlD}Def%Q{!QU_tD0d9%OttH}QE9fdQd!OlttU}O-Q{{Hle%f}dt{tUHtU%9}9beQD!tUUe{PH{tl{e{}ebU9HOHlOetfHdQEf9}OUHOD{f5{%O{lDtt}UoO9{OQHZDOQDd}!QlOt{}Qf%!dH9DQ%tQg!dlOeQ%.DfdaQU!OU{eqf!{OlHH}t}f%9!O{H9HM%9dQ{9OHUQDl}QQH{DUDettU}{(Q9-!%UDet%UdOlQeQt9}9fDQt!UU{Dfdt{}lQODHtDUfOQ{!QU>U%deD}9UOOH{%QOUd%{%lttU}OQQ9QOO9UeD%}dU{Dl{t9}XZ*QD!%.9eO%{dQ{OO%H}DtdU9%!{U!e5%xoD!OOUtUOUfQQ!{%UOtt}UaO9{D!HsDd%Ddf{UlUt{}UttQ%OZUtD9%Od!{QlQH%}Jl!QU!OU{e}%>>f9DUteoDOfUQQ!Ql%Df}tdt}tO{HUDG?!dD{tlUtO9l<Q9{!%HQet%tdO{tdDtZ}9fD9t!UUle{%{d/{Q%lHtDUfO9{!QUdt%fDQQ9UOeH{D{fh9t{DUD{D}O-e9Ql9U%eD%tdUtHl{tl}yp!QD!DUUeDUQdQ{QO%tfDtfHQO!!UQe{!H-D9tOUtHD{f9Qj!Qfltt}UKO!.OQHde%fQ9%{UlHt{%%EsQf!DUteU%tUf{QlKH%%UftQH!OUt!i%8dQ9DUQHUDlf{Q9! UQQl}tMU9OlDHQDd%%QxD!lUtO}{d%9M!fUD}tO_dO{tlQt{D%5%QtOO%Ue{%ldv!tODHeDUfDQ{!Ofet%}DLt!{OOH!DQf{HH{DlttUffy{99Oot%9{%td%{Ol!tQfOf%!De%UUeD%{QU{7HQHD%t)OQO!tUQed}%QP9tHUHHD{fUQsO{lDD%}UQO{DOQHOe%%}dt!HlO}{}H_69{!DtbeUGtd{OQUlH%}QftQH!OUteQ%OQe9DliHU%Df{Q9!7lftD}%U99OO{HQ%O%%d}{tlDQd}{1Q9AUOUDee%U9OeDlQtOD%f}Qt!%UO%{d!d2{{ODtQDUdtQ{!Qd9t%}DTt9HOOH{DQnQtf{DU1tUfON{9QOKt%9{%td%{OlttQ}ff%9QfUUUeD%{{e{mOfHDDefUQtDfUQe&}%{!9tOHHO%{OtQ0!{lDte}UQD9{HQ9Oe%fQdt!%lODU}QQ^9f!DHEeU%ld{!OlRD%%{ftQ%!OHteQ<{i%!DUOHUDDf{Q9!*UftD-tdf9OOtHQ}O%%{#{tHUD_}{jU9h!fUDD7%UdD{!lQtOD%9{Qt!HUOe{%Qd{eHODHtDUQ%Q{!9UVD%!{6t9%OOH!DQfOd%lDt}tU}Dn{9tOceQeD%tte{Ol{tQ}df%QD!tUUde%{dU{,O%HDDtfUQOleUQel}%)D9tOUHOD{lfQ-!{lDtD}U5U9{UQ?Ue%f9dt{HlOtt}QcODD!DHdeUQOd{{9l7HfDDf%t9!OU{eQQ6n%9}OtHD{df{QQ!BD{tD}e-U!O}DHQDl%%d}{tl%tO}{U{9aOOUDee%UdO{{lQtQD%={QtObUOet%QQ={UODtdDUf}Q{!tUqD%%tnt9fOOH!DQfOd%lDH9tU}}i{9tOxHeeDfneO{OlHtQdHf%Q}!tUHeO%UU}{5O%HDd9fUQl!{UOQe}%bD9teeHOD!fQ{LDOlDed}Uie9{O{HL}BOddt!clOeQ}Q_+Q%lDU%eU%%d{{tlLttDDbD9H!OU}eQ%!n%9DOtttDef{QD! t!tD}tVU{UldHQDe%%Qd{tlUtO}{dH9^OOUDD!%UdU{{lQedD%M9Qt!fUOeD%QdO}DODtdDU!dQ{!9UKtf}DM%e9OOH{DQ{ed%{}ltDU{%g{9HOmHdeD%DdU!U%HtQ}Uf%9t!tUUeOx{Qe{vlOHD}QfU9Q!{H{ef}%d!9tO}HOD{fQ9Q!UlDe{}UKt9{OQHL}1JHdt!9lOtH}Q3YQ%!DH{eU%%d{{}lmtwDDft9e!OUeeQ%lN%{{OteU9%f{Qt!TUdtD}D^U{UQ0HQDH%%Qt{tlUtOf{dU9gOlUDD9%UQQ{{U{tdD%GOQt!}UOe{%QQQ{!ODt!DUftQ{!QUaDV}fJt{{OOHHDQf3d%{DUltU}f {9%OjHzeD%t9-{OlDtQ}Uf%9!!tUUde%{de{alYHDDtfUQOdOUQet}%d99tOUHOD{a{Qy!llDtD}UdZ9{OQtle%fldt{tlOt{}QwF{l!DHOeU%%d{{QlNH%%!ft99!OUOeQ%D<%{Ql%HU}<f{}%!3lftD}tNU9t}fHQD=%%}U{tlHtO}tt 9uOtUDQU%Udl{{l9t:}QllQt!UUOQQ%Qdd9%lZd!DUfOQ{*%UEtf}DdDDHOOtdDQZHd%{DltDU%f){9fO<HeeD%edUOOlHtQ}%f%9!!tH}eOX{dD{ l}HD}!fU9e!{UQeO}%dt9tlOHO}9fQQnOtlDel}UuU9{O{Hm}%ftdt!OlOed}Q*9Q%lDH}eUf!d{{9lyeQDDpD!H!OH{eQf}m%9DOteU%9f{9Q!6U%tD%O3U!OUOHQ}d%%Q!{tUdtOf{V{9plJUDDU%UdH{{lQtDD%k}QtOHUODO%Q9#!UODtDDUffQ{OlU_t%%gJt{UOOtODQfQd%!DU}tU%!0{9{OKH%eD)tQl{OU9tQ}df%{:!tHt%l%{QQ{SUeHDDtfU{O!%UQD?}%dD9tl{HOD{HeQa!flDeU}UIO9{OQtle%f%dt!!lOt{}QFE{q!DHteUfUd{{{l)t%%lft9l!OHfeQfN3%!Dl%HU}!f{Q9!bHQtD}tUt9Ol{HQD9%%dD{tlUtU}{dQ9=O%UDDz%UQO!UlQtfD%dOQtOUUO}{f%d&{}ODHeDURtQ{UQU!t%%e_t{%OOtdDQfMU9{DUHtU}UL{9QONt%9{%tQU{OlltQ}Qf%QDUHUUD!%{d{{Pl%HD};HOQOO{UQ{d}%C}9tOHHODUO}Qu{%lD9e}U&l9{OOXee%%Ddt%%lOt!}QQ_tO!DHeeU%ld{OUl?e1{Hft9t!OtdeQ%y5%!DlQHU}Uf{9{!)UttD}tQd9OllHQD{%%dD{tHUeH}{d!9bldUD}H%U9O{UlQe9D%)fQtOdUO}{fQd1!dODt}DUfHQ{O{UHt%f(Rt9}OOH{DQf7Ud{DUDtU%tb{9{OFH%!Q%tQH{OUDtQ%Qf%{Dl9UUDl%{d9{&H{HD}tffQOO!UQee}%de9tUUHUD{s9Qh{flD}c}UZO9!OQtQe%fddt{UlOt{%O=M{<!DHDeU%Dd{!QlfH%}}ft{Q!OHOeQ8mHl9DleHUDlf{{U!Jt%ef}tdH9OUOHQ%d%%9D!QlUel}{_99YU{UD%t%DdO!!lQeOD%=HQt!DU}e{%Qdz%OODHeDUdOHD!QHdt%}};t!%OOD{f!f.Qf{DHGtUftK{!Q}UU%D}%tdH{OU!tQ%QlQQDODUU}9%{dQ{_U%t!Dt_tQOOOUQeD}%d%{DOUtHD{flQM{%lDeD}e8O{UOQe!e%%Ddt{UUtt{%{CX{Q!DUDeU%OQU{QUQH%}!ft9t!OH{DQ%kdf9DODHU}Uf{{QDUl%e}}t0H9Ol!HQD1sQdD!DlUtD}{;Q9 !%HletftdO!OlQtOD%XD9H!UHle{fDdz!,ODet}DfO9!!QUdt%%}>t!%ltH{DUfp}O{DletU%OM{9O}eU%eD%t}s{Ol!tQ}{lHQD!tUUOf%{d9{JO%}!Dt.tQO!{UQe<}%(DO!OUtUD{f9QZ{%lDet}eAO{!OQtOe%f%dt{Dfdt{}QApfx!DUeeUKOUD{Ql}H%D}ft9D!Oe{df%Ide9DU2HU%tf{{QO-l%eH}t#H9OUtHQfJLQdD!llUeD}{QO9_l%H}etf!dO{!lQedD%QDQD!UH9e{fUd6OQODHt!efOQ{!QUdt%}Dut9UOOH{DQfQd%{DlttU}UA{9QO_U%ll%tdU{Ol{tQ}nf%QD%}UUeO%{d9{=O%HDDtfUQO!{U9Dl}%ND9tOeHHD{fQQZ{DHf%U}ewD9{OQHmeDQe{tU>el%O}!L{Q%!DUteOQ9{UUUl9tlDDftQU!{t9fKQQ{OlftQ}O.9fl97!gl%tD}Ud%lttdtO%QX}90UltU}lAf9OO9!%UDet%UdO{{lQDU.%fDQt!UUOe{%Qd39%ODH}DtfOQ{!Ql%}!}fd79UOOH{DI2Q!DUleU%H}Om{9QO#U%eD%tdUUOlltO}Tf%QD!UtLfUf{d!{QO%HDDtfO{%!{UQej}%8D9tOUD%8{f{Q6!dUdtt}U(O9QU{DUplQ=d}!2lOt{}Qf%!9H{DDf8dl{flOl9tdDDftQU!{eQDU%9de9DOtHUD{dH!tU{D{%edU{HlHUODtFHQQd%{eleee}{yQ98!DeQfUQH!dllH!}%f99{!%H%D!fQQ9!9!}tt}Qp!9HQl!tUut%}DYU!}HtDOo!Q%!f{}l}t}}OM{9Q!%t9f}QU!{{Hl}tQ}Mf%QtOeeUfUdU9dl(tf}fQAfUQO!{H{%d}%nD9tlHHOD{fQ{+OUlDtt}UpO9{OlH#D{Utdt{UlOtH}Q,dQ%!}UteDOdd{{QlSt9DDfeQU!tffeQ%B;%U9OtHHDOf{Ul!Nl%tD}tGU9OO{HU%{%%dD{teftO}!aQ9I!%Hv9!%UdO{{eHtuDffDQte}UOe{%Qdv9%ODHt%U1%Q{!QUat%}Dd!9UlU9UDQfQd%O9lttU}O){H!O_U%eD%DdU{Ul{tUf{f%QD!tDfeO%!dQ{zO%t7{!fUQO!{DHe5}fuD9tD}HOD{fQQd{%lDttfUUQ9{OQH5e%%DQ%{UlOe9}Q=QQ%!DUteU%O9{!QlPtMDDfDQU!tU{eQf}-%9DOtHtDOf!QQ!OU{tD}eZU{DO{H9Ds%fdD{%f9tO}{xQ{O!%U}et%DHd{{lQtMd6fDQe!UUOdH%QdQ9%O%HtDUfOQ{d!U-eq}DIe9UOUH{DQfed%{fltte}O#{9QlQtleD%%dU!el{tQ}pd%{{!tUDeO%UdQ{9O%HD}!fUQe!{U9ew}%oD!tl%HODHfQQ!{%U%ttfUdQ9{OlHKD9%DQQ{UHO_%}Qc!Q%OdUtDQ%OQOlflKt{DDgdQU!OU{eQ%HV%{?OtH%DOfOQQO3U}tD}})U{DO{HODR%%QU{tletO}l#Q9*!%H%eD%Udt{{Ult D%fD{t!tUOeU%Qd{9%OfHt%Ud9Q{!lUIt%}DdQ9UUOPDDQfOd%{Dlte{}Ox{DfOSHQeDfydU{Ul{eQ}Uf%Qf!tUHeO%UdQ{3URHDD}fUQH!{UQe*%%Q!9tOeHOD}fQQQ{%lDD{}U)H9{O!Hve%%D{t!9lOtl}QdnQ%OfUteUkQd{{!lAtQDDftQUOUe!eQ%{W%!dOtHUDOd{Ql!PUQtD}%3U9HO{eQ{*%%Qd{tlUtO}DwQ!6!fUDef%Ude{{lUtN%%ffQt!%UOe{%QdD9%UDteDUfDQ{!UUPe{}D&t9DOOHUDQfOd%{%lteU%{j{9!OMHQeD%%dU{OlUtQ}9f%9X!tUUeOfO9f{/lQHD}ffUQO!{tQDU}%dy9tODHODlfQ9Q!llDtf}Ud99{OQH+}VfQdt{%lOed}Q3yQ%!DH9eU%td{{UlntTDD_tQ}!OUleQ%fS%{cOtHUDDf{Q!!/UQtD}t#U{OOlHQD9%%Q!{tlttO}{Ol9?OdUDe%%UdO{{tQ}9D%ffQtOUUODl%Qd{eHODHtDU{dQ{!9Uyt%{dNt9tOOHlDQfxd%lDt}tU}U_{{QOIHDeD%tl}{OlOtQ}{f%QD!teU%H%{d{{:l%HD}UfUQtDfUQea}%!l9tOHHOD{!lQV{%lDt}}UjO9{HQD9e%%Ddt!UlOeQ}Qk H9!DUteU%td{{Ql.D%ffftQU!OH{eQ%%z%{%feHUDOf{Q{!(l%tD}tO}9OO!HQD!%%dD{tlU}!}{iQ9YOMUDeD%UdteflQthD%{fQt!HUOe{{ldZ{9ODt,DUfOQ{!Qtlt%%Qbt9eOOH{DQf*{!{DUdtU}tB{9QOoU%9!%td}{OletQ}df%9QU%UUeO%{Od{+OfHDDDfUQtDfUQei}%!e9tOHHOD{U!Q {%lDte}U+O9{OQH#e%%Ddt{flOt{}Q)999!DUteU!tl!t{}Dr9DffeQU!OU{eh%9d{9DOtHU9HOUH{eH%Dd9}};U9OO{HQDn%%dD{tlUtO}{<Ql !%UDet%UdO{{lQdu5%fDQt!UUOe{%Qd+Q%teD}DUfOQ{!Q%!t%}}^t9UOOH{DQfx{!{DlDtU}Oq{9QO<U%{H%tdH{OlOtQ}Qf%!QDKUUel%{d%{BOfHDDefUQtDfUQe8}%dU9tOHHOD{!lQ_{flDte}UFO9{OQele%%%dt{UlOt{}QhO9%!DU}eU%Od{{9lkt*DDftlH!OU{eQ%7y%9DOtHU!,f{QQ!vUgtD}t1U9O}}HQDd%%df{tlHtO}Ul}9q!%UD%e%Udl{{lQ,!D%f}Qt!UUOe{%QdsO!ODHDDUfOQ{!QU:t%OHKt9HOOHODQfQd%lQ%&tU}lW{O9O7UfeD%}dU{t%ftQ}_f%!}!tUHeO%{lQ{:OfHDDtfUQO!{H<%%}%d99tl}HOD!fQQd{%U#Q!}UiO9{llHaef%Dd%D9lOt{}Q9dQ%!}UteU{ed{{9lCtdDDftQU!OtHeQ%QP%9DOtHUDO*OQl!ZUdtD%djU9OO{t{DU%%Q:{tlftO}{rQ9LOtUDee%Udt{{l{tVf{d9Qt!HUO%!%Qdd9%O%HtDDldQ{!QUc}f}Dme9UlU9UDQfdd%!IlttU}OdO}OOCH.eD%fdU{Ol{tQ93f%Qf!tUUeO%{dQ!QdQHDD%fUQ}!{UQe7%QdQ9tOtHOf{fQQd{%lD}d}U2D9{O9H2e%%DdtedlOte}QX{Q%!DUteU;3d{{tl8tQDDftQU!OUteQ%HT%9fOtHUDOf{QO!/UUtD}t/U9OO{HQ}e%%Ql{tl}tO}{xQ9IllUDDO%Ude{{lQtED%,eQtOdUODw%QdQ9%ODOODUf%Q{!tU<el}DNtUlOOH}DQf!d%{DlttU%U6{9tO.HOeDf9dUOOlHtQ}Uf%9{!tU%eO%{d%{kl!HD}dfUQ%!{UQet}%S}9tO%HODefQQ{delDtD}UQl9{O9Hse%f{dt{HlOtO}Qz8Q%!DHQeU%Od{{{laH%DDftee!OU{eQ%d*%9DOtHHDOf{QQ!Sl%tD}ts%9OO{HQD.tddD{DlUtO}{JQ92!%Hlet%edO{!lQtwD%fD9U!UUte{%9dI9%ODHt%2fOQl!QUQt%}%Xt9Ul!H{D{f.d%{Dl}tU}O#D9QOhU%e}%tdU{Ol{tQ}pf%Q%!eU%eO%{dQ{9lOHDDtfUQ{lHeO%QQd{tleOHHHDOfQQj{%lt}9}eJt9{OQH2eDQH{%U%lHeH}Q7)Q%!te<fOQl{fl!H9}Dfd9Q!DHDD9fYQd!d!etU}MF99lQ!!Ql%tD}tLO!}OlH{DW%%dD{Ut_e9}{WQ9_!%Mfet%HdO{{lQtTD%dD{(!UUle{%9dM{QODHt}lfOQl!QU<t%}Dzt9UlHH{D9f7Qd{DlDtU%UdQ9QO9U%e}%tdU{OH{te}R(dQD!}UUeH%{9Q{!O%tKDtfHQO!HUQ}k!O+D9fOUHlD{fUQo{%e9tt}e0O9HOQHQe%%DdD{Ultt{}{nzQ%!DttD!%OdH{QldH%D%ftQU!DU{e!%od29DOtHUDOWQQQ!_l%t}}tNU9OO{HQDB%%d}!dlUtO}{J!9U!%UDet%OQDUUtfe9of9tOH!eUDe{%QdP9DteDti=9lOO!!U!t%}Dut9OU9D{f%Q{Qd!elttU}O1Q{UH{}dDfd%!tlUtU}f+9Q%OHH}DteH%%dQ{PO%Htd=9OOlU%D{%fA%9%O%OeHfD{fQQm{DU}}tdt9t!9HQ}d&d%fd%{UlOt{}FdUl=ODHfeU%Od{!{tOH%DDftQt!OU{eQfQQk9DOeHUDef{QQ!:H%Dl}t.H9OO!HQD{%%dDOQlUtl}{q{9/!%UDet?9dO{{lQtPD%f%Qt!DH9e{%Qd_{%ODHeDUdOHD!QU!t%%5Mt9eOOetO9fYQ9{DU{tU}la{99OjHQ9l%tdU{Ol%tQ}df%9z}!UUeO%{QQ{nOfHD%tdsQO!HUQe{}%d99tlt9tD{fHQG!{lDtt}U2OHlOQH!e%f9dt{tlOttfO1<99!DHteU%ld{{QlStQ{lftQU!OH{eQ%di%9DlQHUDtf{Q{!_l%tD%I9D9OO{HQDO%%d}{tlttO}Ul}9<!%UDDE%Udl{{lQefD%fDQt!UUOe{%Qd2{OODHtDUfUQ{!QU1t%Ofmt9UOOH!DQfrd%{DlttU}O/{9!OpU%eD%}dD{Ol{tQD%9eO)tIUee%%{dQ{;ODtf5eQUODUDef%O%ddQ9tOUHODQ9d!IUOe}%D%!?O9{OQtQ#e%DdD{UlUt{}Q.2{%OdUtet%OdO{QldH%DDfeQU!HU{eQ%vE%9DOte!DOfOQQ!Ql%t%}tdt{IO{H!DvfddD{tlUtO%Q-Q9{!%U}et%UdO{{U{t&}dfDQD!UUee{%OUe9%ODHt}dfOQ!!QUR%O}DqD9UODH{DHfKQ{U3ltte}ObD9QOdU%e%%tdDDdl{tQ}^VOQD!eUUeO%DdQ{QO%H%DtfUQO!{d!ek}%2D9eOUHOD{fQQk{%lDtD}eRO9{OQH9D9%Ddt{Ul{%liQ{QOU!De}%edH{ll!t9ldvef}Q}!OU{eQ}%!{ODtQ}eDff{QQ!Ml%dd}tIU9OO!HQDE%%dDU}lUtO}{>99>OjUDetfldO{{lQtYD%fDQtOtUfe{%Qd+9fODHtDUdO9f!QUxt%}Dzt9eOOtO}Of(df{DlDtU}O={9QldU%eD%tdt{Ol!tQ}{ddQD!tUUeO%{d9{wO%QfDtfUQO!!UQe7}%*D9tOUHOD{ffQk{%lDt}}D+O9{OQU%}OQ%Qt{elft{}QkqQDO}et%tQ5!9lQtQ}UDfC9QU!OU{eFfD!Ql}H}DD#lQUO9!9UttD}t*U9{ltDO89mY!9UQe9}Hd!9OO}OdH!et%UdO{QUt}}ye9t!DUDD9fl%!dt9%ODHtDOhU!eUQDd}%,%{}ODtlHlDOf)d%{DlUe%dt{d9!OfU%eD%tdO!etD}f29d9O{HeDtfHfO{HlUtHDfD}f%QO!{UQt%fU{HlQH}DtDlflQK{%lDtUfe{{lQH}H9DO%Ddt{Ul{DOKH9{OfH{ef%}%Hdt{QlkH%Dt9H!UU%D!f{%9d99DOtHUD{dd!QUDeQ%{}tJU9OOt9<DK%%dD{}lUtl}{F998OQblet%UdO{llQtdD%18t!!UUOe{%Ud/9fODet{?fOQ!!QUot%%Qjt9%V{H{D9f/QO{DletU}l {9O}eU%eD%tQg{Ol!tQ%QtQQD!eUUee%{dQ{0O%t{DtfHQO!OUQez}%d%}%OUHlD{flQw{%lDDtfMqO9OOQHSe%f{dt!tdtt{}OG(9I!DUteU%Oll{QlQH%}+ftQt!OUt}O%zdI9DUUHUDlf{QQ!nUQQl}tIU9OUQHQDd%%9DDQlUtU}{+Q9aOAUD}t_zdO{OlQtQD%z{QtOtQte{%Odp{lODHtDUfOUl!QUQt%%C1t9tOOHtOBfXQY{DUftU}l7{99OrHQ9l%tdU{OUHtQ}df%9>}!UUeO%{QH{yOfHD}DHDQO!!UQe9}%)D9tODddD{fQQvODlDte}UQOtDOQHQe%%Ddt{tlOD{%thV9)!DUDeU%%d{!{d{H%}MftQf!OU{eQ%mld9DODHUDtf{Q{!)U{}q}t,t9OUQHQDd%%dD{tlDQd}{cQ9_lDUDee%UQU%UlQtdD%6lQt!UUODOl9dx{3ODtODUfOQ{lQ%ft%}fLt9UOOHtDQdM9Q{Dl}tU}Ha{9OO:U%9Q%tde{OlUtQ}>f%QDtUUUeU%{dQ{XlQHDD%l9QO!{UQ%{}%(}9tUUt%D{fHQT!{lDte}UdU}UOQHHe%fOdt{UlOt{9!V39!!DH9eU%Ud{{UH{H%}9ft!D!OU!eQ%ca%{R%!HUDOf{!O!5lftDftUC9OOeHQDO%%QH{tH%{l}{PH9WUeUDee%Udf{{lOdeD%fDQtU!UOe!%Qd{eHODHtDUQ!Q{!9U>DxU,,t9HOOHlDQfpd%!_f!tU}OB{OOO5UfeD>tH&{OletQ}Of%9H!tt%!l%{dH{?tdHDDefUQ}!{UOQe}%bD9tHeHOD!fQQ{DHlDtt}U9t9{O9H;}PHFdt{HlOtf}QBZQ%OQe%eU%Ud{OOlqHfDDfDQU!tffeQ%+/%OuOtHHDOf{Qt! lftD}DLU9OO{HQ!9%%dD{tlHtO}{0Q9>!%UDet%HdH{{lQtS}dZOQt!UUOeQfH{Ul{t9}!TmQD!eH!U9e{}D,t9UO{}9f{Q+!HUlleDt}OY{9QORf9eD%edU{Ol{tQ}<f%fU!tUHeO%!dQ{(O%tQOUfUQl!{Ule^}fnD9eOUHt9ffQQ7{%Udtt}HsO9U}}H;e%%D9e{Ullt{%{HdQ%!}Utet%Od{{QlOt%DDfDQU!UU{e9%Zd>9DOtQQDOf{QQ! l%tD}t-UUlO{HQD5%%dD{tlUtOde7Q9d!%U%et%HdO!ON9tKDffDQD!UUOe{%UQ&9%O%HtDHfOQ!!QUQt%}DH{9UO
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+Title = "Murderer Mystery 2 Script",
+Author = "by: x.v3gas.x",
+Theme = "Dark",
+Size = UDim2.fromOffset(660, 430),
+Folder = "GUÃ„Â°",
+})
+
+Window:EditOpenButton({
+Title = "Open Menu",
+Icon = "monitor",
+CornerRadius = UDim.new(0,16),
+StrokeThickness = 2,
+Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
+OnlyMobile = false,
+Enabled = true,
+Draggable = true,
+})
+
+local Tab = Window:Tab({ Title = "Esp", Icon = "app-window", Locked = false })
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+_G.ESPEnabled = false
+_G.GunESPEnabled = false
+
+local function NewDrawing(class, props)
+local obj = Drawing.new(class)
+for i,v in pairs(props) do obj[i] = v end
+return obj
+end
+
+local function WorldToScreen(pos)
+local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
+return Vector2.new(screenPos.X, screenPos.Y), onScreen, screenPos.Z
+end
+
+local Section = Tab:Section({
+Title = "Player ESP",
+TextXAlignment = "Left",
+TextSize = 35, -- Default Size
+})
+
+Title = "Gun ESP",
+TextXAlignment = "Left",
+TextSize = 35, -- Default Size
+})
+
+local ESP = {}
+
+local colors = {
+Murderer = Color3.fromRGB(255,0,0),
+Sheriff  = Color3.fromRGB(0,0,255),
+Innocent = Color3.fromRGB(0,255,0)
+}
+
+local lineColors = {
+Murderer = Color3.fromRGB(255,0,0),
+Sheriff  = Color3.fromRGB(0,0,255),
+Innocent = Color3.fromRGB(0,255,0)
+}
+
+local highlightColors = {
+Murderer = Color3.fromRGB(255,100,100),
+Sheriff   = Color3.fromRGB(100,100,255),
+Innocent  = Color3.fromRGB(0,255,0)
+}
+
+local nameColors = {
+Murderer = Color3.fromRGB(255,0,0),
+Sheriff  = Color3.fromRGB(0,0,255),
+Innocent = Color3.fromRGB(0,0,0)
+}
+
+local function detectRole(player)
+if not player or not player.Character then return "Innocent" end
+local role = "Innocent"
+if player:FindFirstChild("Backpack") then
+if player.Backpack:FindFirstChild("Knife") then
+role = "Murderer"
+elseif player.Backpack:FindFirstChild("Gun") then
+role = "Sheriff"
+end
+end
+for _,tool in pairs(player.Character:GetChildren()) do
+if tool:IsA("Tool") then
+if tool.Name == "Knife" then role = "Murderer"
+elseif tool.Name == "Gun" then role = "Sheriff" end
+end
+end
+return role
+end
+
+local function AddESP(player)
+if player == LocalPlayer or ESP[player] then return end
+local line = NewDrawing("Line",{Thickness=3,Visible=false})
+local box  = NewDrawing("Square",{Thickness=1,Filled=false,Visible=false})
+local nameTag = NewDrawing("Text",{Size=16,Center=true,Outline=true,Visible=false,Text=player.Name})
+local highlight = Instance.new("Highlight")
+highlight.Name = "ESP_Highlight"
+highlight.FillTransparency = 0
+highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+highlight.Enabled = false
+ESP[player] = {Line=line, Box=box, Highlight=highlight, NameTag=nameTag}
+player.CharacterAdded:Connect(function(char)
+highlight.Parent = char
+highlight.Adornee = char
+end)
+if player.Character then
+highlight.Parent = player.Character
+highlight.Adornee = player.Character
+end
+end
+
+local function RemoveESP(player)
+if ESP[player] then
+pcall(function() ESP[player].Line:Remove() end)
+pcall(function() ESP[player].Box:Remove() end)
+pcall(function() ESP[player].NameTag:Remove() end)
+if ESP[player].Highlight then pcall(function() ESP[player].Highlight:Destroy() end) end
+ESP[player] = nil
+end
+end
+
+Players.PlayerAdded:Connect(AddESP)
+Players.PlayerRemoving:Connect(RemoveESP)
+for _,p in pairs(Players:GetPlayers()) do AddESP(p) end
+
+local gunLine = NewDrawing("Line",{Thickness=3,Visible=false})
+local gunBox  = NewDrawing("Square",{Thickness=1,Filled=false,Visible=false})
+
+local currentGun = nil
+local function findGunDrop()
+for _,obj in pairs(workspace:GetDescendants()) do
+if obj.Name == "GunDrop" and obj:IsA("BasePart") then
+return obj
+end
+end
+return nil
+end
+
+task.spawn(function()
+while true do
+currentGun = findGunDrop()
+task.wait(0.3)
+end
+end)
+
+local function getRainbowColor()
+local t = tick() % 5
+return Color3.fromHSV((t/5)%1,1,1)
+end
+
+local function teleportToGun()
+local char = LocalPlayer.Character
+local hrp = char and char:FindFirstChild("HumanoidRootPart")
+if not hrp then return end
+local gun = currentGun or findGunDrop()
+if gun and gun:IsA("BasePart") then
+hrp.CFrame = gun.CFrame + Vector3.new(0,3,0)
+end
+end
+
+local function drawPlayerESP(player, data)
+local char = player.Character
+local hrp = char and char:FindFirstChild("HumanoidRootPart")
+local hum = char and char:FindFirstChildOfClass("Humanoid")
+local head = char and char:FindFirstChild("Head")
+if not (char and hrp and hum and hum.Health > 0) then
+data.Line.Visible = false
+data.Box.Visible = false
+data.NameTag.Visible = false
+if data.Highlight then data.Highlight.Enabled = false end
+return
+end
+if not _G.ESPEnabled then
+data.Line.Visible = false
+data.Box.Visible = false
+data.NameTag.Visible = false
+if data.Highlight then data.Highlight.Enabled = false end
+return
+end
+local role = detectRole(player)
+if data.Highlight then
+data.Highlight.FillColor = highlightColors[role]
+data.Highlight.Enabled = true
+end
+local topPos = head and (head.Position + Vector3.new(0,0.5,0)) or (hrp.Position + Vector3.new(0,2.5,0))
+local bottomPos = hrp.Position - Vector3.new(0,2.5,0)
+local top2D,onTop = WorldToScreen(topPos)
+local bottom2D,onBottom = WorldToScreen(bottomPos)
+if onTop and onBottom then
+local height = math.abs(top2D.Y - bottom2D.Y)
+local width = height/2
+data.Box.Position = Vector2.new(top2D.X - width/2, top2D.Y)
+data.Box.Size = Vector2.new(width, height)
+data.Box.Color = colors[role]
+data.Box.Visible = true
+local root2D, rootOn = WorldToScreen(hrp.Position)
+if rootOn then
+data.Line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
+data.Line.To = root2D
+data.Line.Color = lineColors[role]
+data.Line.Thickness = 3
+data.Line.Visible = true
+else
+data.Line.Visible = false
+end
+data.NameTag.Position = top2D - Vector2.new(0,15)
+data.NameTag.Color = nameColors[role]
+data.NameTag.Visible = role ~= "Innocent"
+else
+data.Box.Visible = false
+data.Line.Visible = false
+data.NameTag.Visible = false
+end
+end
+
+RunService.RenderStepped:Connect(function()
+if _G.GunESPEnabled and currentGun and currentGun:IsA("BasePart") then
+local gunPos, onScreen = Camera:WorldToViewportPoint(currentGun.Position)
+if onScreen then
+local rgb = getRainbowColor()
+gunLine.From = Vector2.new(Camera.ViewportSize.X/2, 0)
+gunLine.To = Vector2.new(gunPos.X, gunPos.Y)
+gunLine.Color = rgb
+gunLine.Visible = true
+gunBox.Position = Vector2.new(gunPos.X - 12, gunPos.Y - 12)
+gunBox.Size = Vector2.new(24,24)
+gunBox.Color = rgb
+gunBox.Visible = true
+else
+gunLine.Visible = false
+gunBox.Visible = false
+end
+else
+gunLine.Visible = false
+gunBox.Visible = false
+end
+
+for player,data in pairs(ESP) do  
+    drawPlayerESP(player, data)  
+end
+
+end)
+
+local Toggle = Tab:Toggle({
+Title = "ESP",
+Default = false,
+Callback = function(state)
+_G.ESPEnabled = state
+end
+})
+
+local GunToggle = Tab:Toggle({
+Title = "Gun ESP",
+Default = false,
+Callback = function(state)
+_G.GunESPEnabled = state
+end
+})
+
+local TPBtn = Tab:Button({
+Title = "Gun TP",
+Callback = function()
+teleportToGun()
+end
+})

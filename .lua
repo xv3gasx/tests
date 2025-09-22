@@ -4,9 +4,9 @@ local Window = WindUI:CreateWindow({
     Title = "Murder Mystery 2 Script",
     Author = "by: x.v3gas.x",
     Theme = "Dark",
-    Size = UDim2.fromOffset(540,390),
+    Size = UDim2.fromOffset(540, 390),
     Folder = "GUI",
-    AutoScale = true
+    AutoScale = false
 })
 
 Window:EditOpenButton({
@@ -20,21 +20,16 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
--- Tabs
 local Tab = Window:Tab({ Title = "Esp", Icon = "app-window", Locked = false })
-local TP_Tab = Window:Tab({ Title = "TP", Icon = "zap", Locked = false })
 
--- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
--- Global toggles
 _G.ESPEnabled = false
 _G.GunESPEnabled = false
 
--- Drawing helper
 local function NewDrawing(class, props)
     local obj = Drawing.new(class)
     for i,v in pairs(props) do obj[i] = v end
@@ -46,23 +41,32 @@ local function WorldToScreen(pos)
     return Vector2.new(screenPos.X, screenPos.Y), onScreen, screenPos.Z
 end
 
--- Player ESP
+local Section = Tab:Section({ 
+    Title = "Player ESP",
+    TextXAlignment = "Left",
+    TextSize = 35, -- Default Size
+})
+
 local ESP = {}
+
 local colors = {
     Murderer = Color3.fromRGB(255,0,0),
     Sheriff  = Color3.fromRGB(0,0,255),
     Innocent = Color3.fromRGB(0,255,0)
 }
+
 local lineColors = {
     Murderer = Color3.fromRGB(255,0,0),
     Sheriff  = Color3.fromRGB(0,0,255),
     Innocent = Color3.fromRGB(0,255,0)
 }
+
 local highlightColors = {
     Murderer = Color3.fromRGB(255,100,100),
     Sheriff   = Color3.fromRGB(100,100,255),
     Innocent  = Color3.fromRGB(0,255,0)
 }
+
 local nameColors = {
     Murderer = Color3.fromRGB(255,0,0),
     Sheriff  = Color3.fromRGB(0,0,255),
@@ -123,9 +127,9 @@ Players.PlayerAdded:Connect(AddESP)
 Players.PlayerRemoving:Connect(RemoveESP)
 for _,p in pairs(Players:GetPlayers()) do AddESP(p) end
 
--- Gun ESP
 local gunLine = NewDrawing("Line",{Thickness=3,Visible=false})
 local gunBox  = NewDrawing("Square",{Thickness=1,Filled=false,Visible=false})
+
 local currentGun = nil
 local function findGunDrop()
     for _,obj in pairs(workspace:GetDescendants()) do
@@ -135,18 +139,19 @@ local function findGunDrop()
     end
     return nil
 end
+
 task.spawn(function()
     while true do
         currentGun = findGunDrop()
         task.wait(0.3)
     end
 end)
+
 local function getRainbowColor()
     local t = tick() % 5
     return Color3.fromHSV((t/5)%1,1,1)
 end
 
--- Teleport to gun
 local function teleportToGun()
     local char = LocalPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -157,40 +162,6 @@ local function teleportToGun()
     end
 end
 
--- Sheriff & Murderer TP
-local function getSheriff()
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            if player.Backpack:FindFirstChild("Gun") or (player.Character and player.Character:FindFirstChild("Gun")) then
-                return player
-            end
-        end
-    end
-    return nil
-end
-
-local function getMurderer()
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            if player.Backpack:FindFirstChild("Knife") or (player.Character and player.Character:FindFirstChild("Knife")) then
-                return player
-            end
-        end
-    end
-    return nil
-end
-
-local function teleportBehind(targetPlayer)
-    if not targetPlayer or not targetPlayer.Character then return end
-    local hrp = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
-    local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if hrp and myHRP then
-        local backPos = hrp.Position - (hrp.CFrame.LookVector * 8) -- 8 stud arkaya
-        myHRP.CFrame = CFrame.new(backPos, hrp.Position)
-    end
-end
-
--- ESP Drawing Loop
 local function drawPlayerESP(player, data)
     local char = player.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -273,13 +244,17 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- UI Controls
 local Toggle = Tab:Toggle({
     Title = "Player ESP",
     Default = false,
     Callback = function(state)
         _G.ESPEnabled = state
     end
+})
+local Section = Tab:Section({ 
+    Title = "Gun ESP",
+    TextXAlignment = "Left",
+    TextSize = 35, -- Default Size
 })
 
 local GunToggle = Tab:Toggle({
@@ -290,43 +265,31 @@ local GunToggle = Tab:Toggle({
     end
 })
 
-local TPBtn = TP_Tab:Button({
+local TPBtn = Tab:Button({
     Title = "Gun TP",
     Callback = function()
         teleportToGun()
     end
 })
 
-local SheriffBtn = TP_Tab:Button({
-    Title = "Teleport to Sheriff",
+local Tab = Window:Tab({ Title = "TP", Icon = "zap", Locked = false })
+
+local Section = Tab:Section({ 
+    Title = "TP",
+    TextXAlignment = "Left",
+    TextSize = 35, -- Default Size
+})
+
+local Button = Tab:Button({
+    Title = "Tp To Sherrif",
+    Locked = false,
     Callback = function()
-        local sheriff = getSheriff()
-        if sheriff then
-            teleportBehind(sheriff)
-        else
-            WindUI:Notify({
-                Title = "Sheriff Not Found",
-                Content = "Sheriff not found. Wait for match to begin.",
-                Duration = 3,
-                Icon = "shield-x",
-            })
-        end
     end
 })
 
-local MurdererBtn = TP_Tab:Button({
-    Title = "Teleport to Murderer",
+local Button = Tab:Button({
+    Title = "Tp To Murderer",
+    Locked = false,
     Callback = function()
-        local murderer = getMurderer()
-        if murderer then
-            teleportBehind(murderer)
-        else
-            WindUI:Notify({
-                Title = "Murderer Not Found",
-                Content = "Murderer not found. Wait for match to begin.",
-                Duration = 3,
-                Icon = "shield-x",
-            })
-        end
     end
 })

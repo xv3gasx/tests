@@ -6,7 +6,7 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     Size = UDim2.fromOffset(540,390),
     Folder = "GUI",
-    AutoScale = false
+    AutoScale = true
 })
 
 Window:EditOpenButton({

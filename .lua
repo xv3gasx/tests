@@ -1,5 +1,12 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+WindUI:Notify({
+    Title = "Load Successful ^^",
+    Content = "Come Discord For More Scripts/Updates",
+    Duration = 2.5, -- 3  
+    Icon = "swords",
+})
+
 local Window = WindUI:CreateWindow({
     Title = "Murder Mystery 2 Script",
     Author = "by: x.v3gas.x",
@@ -7,13 +14,6 @@ local Window = WindUI:CreateWindow({
     Size = UDim2.fromOffset(540, 390),
     Folder = "GUI",
     AutoScale = false
-})
-
-WindUI:Notify({
-    Title = "Load Successful ^^",
-    Content = "Come Discord For More Scripts/Updates",
-    Duration = 2.5, -- 3  
-    Icon = "swords",
 })
 
 Window:EditOpenButton({

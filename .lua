@@ -5,7 +5,7 @@ local Window = WindUI:CreateWindow({
     Author = "by: x.v3gas.x",
     Theme = "Dark",
     Size = UDim2.fromOffset(660, 430),
-    Folder = "GUÃƒâ€Ã‚Â°",
+    Folder = "GUI",
 })
 
 Window:EditOpenButton({

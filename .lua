@@ -270,3 +270,5 @@ local TPBtn = Tab:Button({
         teleportToGun()
     end
 })
+
+local Tab = Window:Tab({ Title = "TP", Icon = "zap", Locked = false })

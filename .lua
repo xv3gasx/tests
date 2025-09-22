@@ -1,11 +1,19 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+WindUI:Notify({
+    Title = "Load Successful ^^",
+    Content = "Come Discord For More Scripts/Updates",
+    Duration = 2.5, -- 3  
+    Icon = "swords",
+})
+
 local Window = WindUI:CreateWindow({
-    Title = "Murderer Mystery 2 Script",
+    Title = "Murder Mystery 2 Script",
     Author = "by: x.v3gas.x",
     Theme = "Dark",
-    Size = UDim2.fromOffset(660, 430),
+    Size = UDim2.fromOffset(540, 390),
     Folder = "GUI",
+    AutoScale = false
 })
 
 Window:EditOpenButton({
@@ -272,3 +280,23 @@ local TPBtn = Tab:Button({
 })
 
 local Tab = Window:Tab({ Title = "TP", Icon = "zap", Locked = false })
+
+local Section = Tab:Section({ 
+    Title = "TP",
+    TextXAlignment = "Left",
+    TextSize = 35, -- Default Size
+})
+
+local Button = Tab:Button({
+    Title = "Tp To Sherrif",
+    Locked = false,
+    Callback = function()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Tp To Murderer",
+    Locked = false,
+    Callback = function()
+    end
+})

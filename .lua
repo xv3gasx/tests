@@ -9,6 +9,13 @@ local Window = WindUI:CreateWindow({
     AutoScale = false
 })
 
+WindUI:Notify({
+    Title = "Load Successful ^^",
+    Content = "Come Discord For More Scripts/Updates",
+    Duration = 2.5, -- 3  
+    Icon = "swords",
+})
+
 Window:EditOpenButton({
     Title = "Open Menu",
     Icon = "monitor",
@@ -18,13 +25,6 @@ Window:EditOpenButton({
     OnlyMobile = false,
     Enabled = true,
     Draggable = true,
-})
-
-WindUI:Notify({
-    Title = "Load Successful ^^",
-    Content = "Come Discord For More Scripts/Updates",
-    Duration = 2.5, -- 3  
-    Icon = "swords",
 })
 
 local Tab = Window:Tab({ Title = "Esp", Icon = "app-window", Locked = false })

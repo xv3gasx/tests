@@ -20,6 +20,13 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
+WindUI:Notify({
+    Title = "Load Successful ^^",
+    Content = "Come Discord For More Scripts/Updates",
+    Duration = 2.5, -- 3  
+    Icon = "swords",
+})
+
 local Tab = Window:Tab({ Title = "Esp", Icon = "app-window", Locked = false })
 
 local Players = game:GetService("Players")

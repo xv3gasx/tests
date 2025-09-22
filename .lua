@@ -244,11 +244,16 @@ RunService.RenderStepped:Connect(function()
 end)
 
 local Toggle = Tab:Toggle({
-    Title = "ESP",
+    Title = "Player ESP",
     Default = false,
     Callback = function(state)
         _G.ESPEnabled = state
     end
+})
+local Section = Tab:Section({ 
+    Title = "Gun ESP",
+    TextXAlignment = "Left",
+    TextSize = 35, -- Default Size
 })
 
 local GunToggle = Tab:Toggle({

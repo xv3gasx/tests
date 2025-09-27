@@ -42,6 +42,7 @@ local LocalPlayer = Players.LocalPlayer
 
 -- Globals
 _G.ESPEnabled = false
+_G.GunESPEnabled = false
 _G.WalkSpeedValue = 16
 _G.InfiniteJumpEnabled = false
 _G.NoclipEnabled = false
@@ -119,7 +120,27 @@ Players.PlayerAdded:Connect(AddESP)
 Players.PlayerRemoving:Connect(RemoveESP)
 for _,p in pairs(Players:GetPlayers()) do AddESP(p) end
 
+-- Gun Detection
+local currentGun = nil
+task.spawn(function()
+    while true do
+        currentGun = nil
+        for _,obj in pairs(workspace:GetDescendants()) do
+            if obj.Name == "GunDrop" and obj:IsA("BasePart") then
+                currentGun = obj
+                break
+            end
+        end
+        task.wait(0.5)
+    end
+end)
+
 -- Teleports
+local function teleportToGun()
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if hrp and currentGun then hrp.CFrame = currentGun.CFrame + Vector3.new(0,3,0) end
+end
+
 local function teleportBehind(target)
     local hrp = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
     local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -174,25 +195,33 @@ RunService.Stepped:Connect(function()
 end)
 
 -- TP Buttons
+TP_Tab:Button({Title="Gun TP", Callback=teleportToGun})
 TP_Tab:Button({Title="Teleport to Murderer", Callback=function()
     local m = getMurderer()
     if m then teleportBehind(m)
     else WindUI:Notify({Title="Murderer Not Found", Content="No murderer detected yet.", Duration=3, Icon="x"}) end
 end})
-
 TP_Tab:Button({Title="Teleport to Sheriff", Callback=function()
     local s = getSheriff()
     if s then teleportBehind(s)
     else WindUI:Notify({Title="Sheriff Not Found", Content="No sheriff detected yet.", Duration=3, Icon="x"}) end
 end})
 
--- ESP Toggle
+-- ESP Toggles
 ESP_Tab:Toggle({Title="Player ESP", Default=false, Callback=function(state)
     _G.ESPEnabled = state
 end})
+ESP_Tab:Toggle({Title="Gun ESP", Default=false, Callback=function(state)
+    _G.GunESPEnabled = state
+end})
 
--- RenderLoop (Highlight + Box + Line)
+-- Gun ESP Render Objects
+local gunBox = NewDrawing("Square",{Thickness=1,Filled=false,Visible=false,Color=Color3.fromRGB(255,255,0)})
+local gunLine = NewDrawing("Line",{Thickness=3,Visible=false,Color=Color3.fromRGB(255,255,0)})
+
+-- RenderLoop (Highlight + Box + Line + Gun ESP)
 RunService.RenderStepped:Connect(function()
+    -- Player ESP
     for player, data in pairs(ESP) do
         local char = player.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -232,6 +261,25 @@ RunService.RenderStepped:Connect(function()
                 end
             end
         end
+    end
+
+    -- Gun ESP
+    if _G.GunESPEnabled and currentGun then
+        local pos, onScreen = Camera:WorldToViewportPoint(currentGun.Position)
+        if onScreen then
+            gunBox.Position = Vector2.new(pos.X-12, pos.Y-12)
+            gunBox.Size = Vector2.new(24,24)
+            gunBox.Visible = true
+            gunLine.From = Vector2.new(Camera.ViewportSize.X/2,0)
+            gunLine.To = Vector2.new(pos.X, pos.Y)
+            gunLine.Visible = true
+        else
+            gunBox.Visible = false
+            gunLine.Visible = false
+        end
+    else
+        gunBox.Visible = false
+        gunLine.Visible = false
     end
 end)
 

@@ -3,7 +3,7 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 
 WindUI:Notify({
     Title = "Load Successful",
-    Content = "Minimal MM2 Script Loaded",
+    Content = "MM2 Script Loaded",
     Duration = 3,
     Icon = "swords",
 })
@@ -16,6 +16,17 @@ local Window = WindUI:CreateWindow({
     Size = UDim2.fromOffset(540, 390),
     Folder = "GUI",
     AutoScale = false
+})
+
+Window:EditOpenButton({
+    Title = "Open Menu",
+    Icon = "monitor",
+    CornerRadius = UDim.new(0,16),
+    StrokeThickness = 2,
+    Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
+    OnlyMobile = false,
+    Enabled = true,
+    Draggable = true,
 })
 
 -- Tabs

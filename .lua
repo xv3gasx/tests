@@ -18,6 +18,8 @@ local Window = WindUI:CreateWindow({
     AutoScale = false
 })
 
+-- Open Menu Button + Keybind
+local MenuOpen = false
 Window:EditOpenButton({
     Title = "Open Menu",
     Icon = "monitor",
@@ -27,22 +29,20 @@ Window:EditOpenButton({
     OnlyMobile = false,
     Enabled = true,
     Draggable = true,
+    Callback = function()
+        MenuOpen = not MenuOpen
+        Window:SetVisible(MenuOpen)
+    end
 })
 
--- Keybind Open Menu
+-- Keybind: RightShift
 local UserInputService = game:GetService("UserInputService")
-local MenuOpen = false
-UserInputService.InputBegan:Connect(function(input, gpe)
-    if not gpe and input.KeyCode == Enum.KeyCode.RightShift then
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.RightShift then
         MenuOpen = not MenuOpen
         Window:SetVisible(MenuOpen)
     end
 end)
-
--- Tabs
-local ESP_Tab = Window:Tab({ Title = "ESP", Icon = "app-window" })
-local TP_Tab = Window:Tab({ Title = "TP", Icon = "zap" })
-local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 
 -- Services
 local Players = game:GetService("Players")
@@ -57,8 +57,42 @@ _G.WalkSpeedValue = 16
 _G.InfiniteJumpEnabled = false
 _G.NoclipEnabled = false
 
--- Role detection
+-- Highlight Utility
+local ESP = {}
+local function AddESP(player)
+    if player==LocalPlayer or ESP[player] then return end
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "ESP_Highlight"
+    highlight.FillTransparency = 0
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Enabled = false
+    ESP[player] = highlight
+
+    local function attachChar(char)
+        highlight.Parent = char
+        highlight.Adornee = char
+    end
+
+    player.CharacterAdded:Connect(attachChar)
+    if player.Character then
+        attachChar(player.Character)
+    end
+end
+
+local function RemoveESP(player)
+    if ESP[player] then
+        pcall(function() ESP[player]:Destroy() end)
+        ESP[player] = nil
+    end
+end
+
+Players.PlayerAdded:Connect(AddESP)
+Players.PlayerRemoving:Connect(RemoveESP)
+for _,p in pairs(Players:GetPlayers()) do AddESP(p) end
+
+-- Colors
 local colors = {Murderer=Color3.fromRGB(255,0,0), Sheriff=Color3.fromRGB(0,0,255), Innocent=Color3.fromRGB(0,255,0)}
+
 local function detectRole(player)
     local role = "Innocent"
     local backpack = player:FindFirstChild("Backpack")
@@ -78,108 +112,107 @@ local function detectRole(player)
     return role
 end
 
--- ESP Highlight
-local ESP = {}
-local function AddESP(player)
-    if player==LocalPlayer or ESP[player] then return end
-    local highlight = Instance.new("Highlight")
-    highlight.Name="ESP_Highlight"
-    highlight.FillTransparency=0
-    highlight.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop
-    highlight.Enabled=false
-    ESP[player]={Highlight=highlight}
-    player.CharacterAdded:Connect(function(char)
-        highlight.Parent=char
-        highlight.Adornee=char
-    end)
-    if player.Character then
-        highlight.Parent=player.Character
-        highlight.Adornee=player.Character
+-- Gun TP
+local currentGun = nil
+task.spawn(function()
+    while true do
+        currentGun = nil
+        for _,obj in pairs(workspace:GetDescendants()) do
+            if obj.Name == "GunDrop" and obj:IsA("BasePart") then
+                currentGun = obj
+                break
+            end
+        end
+        task.wait(0.5)
     end
-end
-local function RemoveESP(player)
-    if ESP[player] and ESP[player].Highlight then
-        pcall(function() ESP[player].Highlight:Destroy() end)
-        ESP[player]=nil
-    end
-end
-Players.PlayerAdded:Connect(AddESP)
-Players.PlayerRemoving:Connect(RemoveESP)
-for _,p in pairs(Players:GetPlayers()) do AddESP(p) end
+end)
 
--- Teleports
-local function teleportBehind(target)
-    local hrp=target.Character and target.Character:FindFirstChild("HumanoidRootPart")
-    local myHRP=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if hrp and myHRP then
-        local backPos=hrp.Position - (hrp.CFrame.LookVector*8)
-        myHRP.CFrame=CFrame.new(backPos,hrp.Position)
+local function teleportToGun()
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if hrp and currentGun then
+        hrp.CFrame = currentGun.CFrame + Vector3.new(0,3,0)
     end
 end
-local function getSheriff()
-    for _,p in pairs(Players:GetPlayers()) do
-        if p~=LocalPlayer and ((p.Backpack:FindFirstChild("Gun")) or (p.Character and p.Character:FindFirstChild("Gun"))) then return p end
-    end
-end
+
+-- TP to Murderer / Sheriff
 local function getMurderer()
     for _,p in pairs(Players:GetPlayers()) do
-        if p~=LocalPlayer and ((p.Backpack:FindFirstChild("Knife")) or (p.Character and p.Character:FindFirstChild("Knife"))) then return p end
+        if p ~= LocalPlayer and ((p.Backpack:FindFirstChild("Knife")) or (p.Character and p.Character:FindFirstChild("Knife"))) then return p end
     end
 end
 
--- Local Player
+local function getSheriff()
+    for _,p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and ((p.Backpack:FindFirstChild("Gun")) or (p.Character and p.Character:FindFirstChild("Gun"))) then return p end
+    end
+end
+
+local function teleportBehind(target)
+    local hrp = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
+    local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if hrp and myHRP then
+        local backPos = hrp.Position - (hrp.CFrame.LookVector * 8)
+        myHRP.CFrame = CFrame.new(backPos, hrp.Position)
+    end
+end
+
+-- WalkSpeed
 local function setWalkSpeed()
-    local char=LocalPlayer.Character
+    local char = LocalPlayer.Character
     if not char then return end
     local hum = char:FindFirstChildOfClass("Humanoid")
-    if hum then hum.WalkSpeed = _G.WalkSpeedValue end
+    if hum and hum.WalkSpeed ~= _G.WalkSpeedValue then
+        hum.WalkSpeed = _G.WalkSpeedValue
+    end
 end
 LocalPlayer.CharacterAdded:Connect(function() task.wait(0.5) setWalkSpeed() end)
+
+-- Infinite Jump
 UserInputService.JumpRequest:Connect(function()
     if _G.InfiniteJumpEnabled then
-        local char=LocalPlayer.Character
-        local hum=char and char:FindFirstChildOfClass("Humanoid")
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
         if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
     end
 end)
+
+-- Noclip
 RunService.Stepped:Connect(function()
     if _G.NoclipEnabled then
-        local char=LocalPlayer.Character
+        local char = LocalPlayer.Character
         if char then
             for _,part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") then part.CanCollide=false end
+                if part:IsA("BasePart") then part.CanCollide = false end
             end
         end
     end
 end)
 
--- TP Buttons
+-- TP Tab
+local TP_Tab = Window:Tab({ Title = "TP", Icon = "zap" })
+TP_Tab:Button({Title="Gun TP",Callback=teleportToGun})
 TP_Tab:Button({Title="Teleport to Murderer",Callback=function()
-    local m=getMurderer()
-    if m then teleportBehind(m) else WindUI:Notify({Title="Murderer Not Found",Content="Wait for match.",Duration=3,Icon="x"}) end
+    local m = getMurderer()
+    if m then teleportBehind(m) else WindUI:Notify({Title="Murderer Not Found", Content="Wait for match.", Duration=3, Icon="x"}) end
 end})
 TP_Tab:Button({Title="Teleport to Sheriff",Callback=function()
-    local s=getSheriff()
-    if s then teleportBehind(s) else WindUI:Notify({Title="Sheriff Not Found",Content="Wait for match.",Duration=3,Icon="x"}) end
+    local s = getSheriff()
+    if s then teleportBehind(s) else WindUI:Notify({Title="Sheriff Not Found", Content="Wait for match.", Duration=3, Icon="x"}) end
 end})
 
--- ESP & Highlight Loop
-RunService.RenderStepped:Connect(function()
-    for player,data in pairs(ESP) do
-        local char=player.Character
-        local hum=char and char:FindFirstChildOfClass("Humanoid")
-        if _G.ESPEnabled and char and hum and hum.Health>0 then
-            local role=detectRole(player)
-            data.Highlight.FillColor=colors[role]
-            data.Highlight.Enabled=true
-        else
-            data.Highlight.Enabled=false
-        end
+-- ESP Tab
+local ESP_Tab = Window:Tab({ Title = "ESP", Icon = "app-window" })
+ESP_Tab:Toggle({Title="Player ESP",Default=false,Callback=function(state)
+    _G.ESPEnabled=state
+    for player,highlight in pairs(ESP) do
+        highlight.Enabled = state
+        highlight.FillColor = colors[detectRole(player)]
     end
-end)
+end})
+ESP_Tab:Toggle({Title="Gun ESP",Default=false,Callback=function(state) _G.GunESPEnabled=state end})
 
--- UI Toggles
-ESP_Tab:Toggle({Title="Player ESP",Default=false,Callback=function(state) _G.ESPEnabled=state end})
+-- Local Player Tab
+local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 Local_Tab:Slider({Title="WalkSpeed",Step=1,Value={Min=16,Max=100,Default=16},Callback=function(val) _G.WalkSpeedValue=val setWalkSpeed() end})
 Local_Tab:Toggle({Title="Infinite Jump",Default=false,Callback=function(state) _G.InfiniteJumpEnabled=state end})
 Local_Tab:Toggle({Title="Noclip",Default=false,Callback=function(state) _G.NoclipEnabled=state end})

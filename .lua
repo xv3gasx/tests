@@ -37,8 +37,8 @@ local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
 
 -- Globals
 _G.ESPEnabled = false
@@ -46,10 +46,22 @@ _G.WalkSpeedValue = 16
 _G.InfiniteJumpEnabled = false
 _G.NoclipEnabled = false
 
+-- Utility
+local function NewDrawing(class, props)
+    local obj = Drawing.new(class)
+    for i,v in pairs(props) do obj[i]=v end
+    return obj
+end
+
+local function WorldToScreen(pos)
+    local screenPos,onScreen = Camera:WorldToViewportPoint(pos)
+    return Vector2.new(screenPos.X, screenPos.Y), onScreen
+end
+
 -- Colors
 local colors = {Murderer=Color3.fromRGB(255,0,0), Sheriff=Color3.fromRGB(0,0,255), Innocent=Color3.fromRGB(0,255,0)}
 
--- Role detection
+-- Detect Role
 local function detectRole(player)
     local role = "Innocent"
     local backpack = player:FindFirstChild("Backpack")
@@ -69,7 +81,7 @@ local function detectRole(player)
     return role
 end
 
--- ESP (Highlight only)
+-- ESP (Highlight + Box + Line)
 local ESP = {}
 local function AddESP(player)
     if player == LocalPlayer or ESP[player] then return end
@@ -78,7 +90,11 @@ local function AddESP(player)
     highlight.FillTransparency = 0
     highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
     highlight.Enabled = false
-    ESP[player] = {Highlight = highlight}
+
+    local box = NewDrawing("Square",{Thickness=1,Filled=false,Visible=false})
+    local line = NewDrawing("Line",{Thickness=3,Visible=false})
+
+    ESP[player] = {Highlight=highlight, Box=box, Line=line}
 
     player.CharacterAdded:Connect(function(char)
         highlight.Parent = char
@@ -91,8 +107,10 @@ local function AddESP(player)
 end
 
 local function RemoveESP(player)
-    if ESP[player] and ESP[player].Highlight then
-        pcall(function() ESP[player].Highlight:Destroy() end)
+    if ESP[player] then
+        pcall(function() if ESP[player].Highlight then ESP[player].Highlight:Destroy() end end)
+        pcall(function() if ESP[player].Box then ESP[player].Box:Remove() end end)
+        pcall(function() if ESP[player].Line then ESP[player].Line:Remove() end end)
         ESP[player] = nil
     end
 end
@@ -149,7 +167,7 @@ RunService.Stepped:Connect(function()
         local char = LocalPlayer.Character
         if char then
             for _,part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") then part.CanCollide = false end
+                if part:IsA("BasePart") then part.CanCollide=false end
             end
         end
     end
@@ -171,16 +189,51 @@ end})
 -- ESP Toggle
 ESP_Tab:Toggle({Title="Player ESP", Default=false, Callback=function(state)
     _G.ESPEnabled = state
+end})
+
+-- RenderLoop (Highlight + Box + Line)
+RunService.RenderStepped:Connect(function()
     for player, data in pairs(ESP) do
-        if data.Highlight then
-            data.Highlight.Enabled = state
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local head = char and char:FindFirstChild("Head")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not _G.ESPEnabled or not (char and hrp and hum and hum.Health>0) then
+            if data.Highlight then data.Highlight.Enabled=false end
+            if data.Box then data.Box.Visible=false end
+            if data.Line then data.Line.Visible=false end
+        else
             local role = detectRole(player)
-            if role=="Murderer" then data.Highlight.FillColor = Color3.fromRGB(255,0,0)
-            elseif role=="Sheriff" then data.Highlight.FillColor = Color3.fromRGB(0,0,255)
-            else data.Highlight.FillColor = Color3.fromRGB(0,255,0) end
+            if data.Highlight then
+                data.Highlight.FillColor = colors[role]
+                data.Highlight.Enabled = true
+            end
+            if head and hrp then
+                local top2D, onTop = WorldToScreen(head.Position + Vector3.new(0,0.5,0))
+                local bottom2D, onBottom = WorldToScreen(hrp.Position - Vector3.new(0,2.5,0))
+                if onTop and onBottom then
+                    local height = math.abs(top2D.Y - bottom2D.Y)
+                    local width = height/2
+                    if data.Box then
+                        data.Box.Position = Vector2.new(top2D.X - width/2, top2D.Y)
+                        data.Box.Size = Vector2.new(width, height)
+                        data.Box.Color = colors[role]
+                        data.Box.Visible = true
+                    end
+                    if data.Line then
+                        data.Line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
+                        data.Line.To = Vector2.new(top2D.X, top2D.Y)
+                        data.Line.Color = colors[role]
+                        data.Line.Visible = true
+                    end
+                else
+                    if data.Box then data.Box.Visible=false end
+                    if data.Line then data.Line.Visible=false end
+                end
+            end
         end
     end
-end})
+end)
 
 -- Local Player Controls
 Local_Tab:Slider({Title="WalkSpeed", Step=1, Value={Min=16, Max=100, Default=16}, Callback=function(val)

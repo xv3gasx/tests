@@ -207,6 +207,3 @@ RunService.RenderStepped:Connect(function()
         else gunBox.Visible,gunLine.Visible=false,false end
     else gunBox.Visible,gunLine.Visible=false,false end
 end)
-Window:OnClose(function()
-    print("Window Closed")
-end)

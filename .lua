@@ -18,7 +18,7 @@ local Window = WindUI:CreateWindow({
     Author = "by: x.v3gas.x",
     Theme = "Dark",
     Size = UDim2.fromOffset(540, 390),
-    Folder = "GUI"
+    Folder = "GUI",
     AutoScale = false
 })
 

@@ -37,14 +37,7 @@ local TP_Tab  = Window:Tab({ Title = "TP", Icon = "zap" })
 local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 local HttpService = game:GetService("HttpService")
 
-InfoTab:Divider()
-InfoTab:Section({ 
-    Title = "Discord",
-    TextXAlignment = "Center",
-    TextSize = 17,
-})
-InfoTab:Divider()
-
+--divier
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")

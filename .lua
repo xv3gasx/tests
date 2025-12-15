@@ -50,6 +50,10 @@ local ROLE_COLORS = {
     Innocent = Color3.fromRGB(0, 255, 0)
 }
 
+_G.LineESPEnabled = false
+local ESP = {}
+local RoleCache = {}
+
 -- 7. Toggles
 EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(state) _G.BoxESPEnabled=state end})
 
@@ -71,6 +75,12 @@ EspTab:Toggle({
             if hl then hl.Enabled = state end
         end
     end
+})
+
+ESP_Tab:Toggle({
+    Title="Player Line ESP", 
+    Default=false, 
+    Callback=function(state) _G.LineESPEnabled = state end
 })
 
 -- 8. Functions
@@ -328,6 +338,103 @@ task.spawn(function()
         for player, hl in pairs(_G.HighlightCache) do
             if hl and hl.Parent then
                 hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+            end
+        end
+    end
+end)
+local function detectRole(player)
+    local char = player.Character
+    local bp = player:FindFirstChild("Backpack")
+    local role = "Innocent"
+
+    if bp and bp:FindFirstChild("Knife") then
+        role = "Murderer"
+    elseif bp and bp:FindFirstChild("Gun") then
+        role = "Sheriff"
+    elseif char then
+        for _, tool in ipairs(char:GetChildren()) do
+            if tool:IsA("Tool") then
+                if tool.Name == "Knife" then
+                    role = "Murderer"
+                    break
+                elseif tool.Name == "Gun" then
+                    role = "Sheriff"
+                    break
+                end
+            end
+        end
+    end
+
+    -- Cache güncelle
+    if RoleCache[player] ~= role then
+        RoleCache[player] = role
+    end
+    return role
+end
+
+local function safeNewDrawing(class, props)
+    local ok, obj = pcall(function() return Drawing and Drawing.new(class) end)
+    if not ok or not obj then return nil end
+    if props then
+        for k,v in pairs(props) do
+            pcall(function() obj[k] = v end)
+        end
+    end
+    return obj
+end
+
+local function worldToScreen(pos)
+    local ok, sp, onScreen = pcall(function() return Camera:WorldToViewportPoint(pos) end)
+    if not ok or not sp then return Vector2.new(0,0), false end
+    return Vector2.new(sp.X, sp.Y), onScreen
+end
+
+-- Player Line ESP yaratma
+local function createLineESP(player)
+    if player == LocalPlayer or ESP[player] then return end
+    local line = safeNewDrawing("Line", {Thickness=2, Visible=false})
+    ESP[player] = {Line=line}
+
+    local function onCharacterAdded(char)
+        task.wait(0.1)
+        if ESP[player] and ESP[player].Line then
+            ESP[player].Line.Visible = _G.LineESPEnabled
+        end
+    end
+    player.CharacterAdded:Connect(onCharacterAdded)
+    if player.Character then onCharacterAdded(player.Character) end
+end
+
+local function destroyLineESP(player)
+    local data = ESP[player]
+    if not data then return end
+    if data.Line then pcall(function() data.Line:Remove() end) end
+    ESP[player] = nil
+    RoleCache[player] = nil
+end
+
+Players.PlayerAdded:Connect(createLineESP)
+Players.PlayerRemoving:Connect(destroyLineESP)
+for _, p in pairs(Players:GetPlayers()) do createLineESP(p) end
+
+-- RenderStepped Loop
+RunService.RenderStepped:Connect(function()
+    for player, data in pairs(ESP) do
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local head = char and char:FindFirstChild("Head")
+        if not _G.LineESPEnabled or not (char and hrp and head) then
+            if data.Line then data.Line.Visible=false end
+        else
+            local role = detectRole(player)
+            local top2D, onTop = worldToScreen(head.Position + Vector3.new(0,0.5,0))
+            if onTop then
+                data.Line.From = Vector2.new(Camera.ViewportSize.X/2,0)
+                data.Line.To = top2D
+                data.Line.Color = ROLE_COLORS[role] or ROLE_COLORS.Innocent
+                data.Line.Visible = true
+            else
+                data.Line.Visible = false
             end
         end
     end

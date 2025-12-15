@@ -40,6 +40,15 @@ _G.BoxESPEnabled = false
 local ESP = {}
 local ROLE_COLORS = { Murderer=Color3.fromRGB(200,0,0), Sheriff=Color3.fromRGB(0,0,200), Innocent=Color3.fromRGB(0,200,0) }
 local currentGun = nil
+_G.HighlightESP = false
+
+_G.HighlightCache = {}
+
+local ROLE_COLORS = {
+    Murderer = Color3.fromRGB(255, 0, 0),
+    Sheriff  = Color3.fromRGB(0, 0, 255),
+    Innocent = Color3.fromRGB(0, 255, 0)
+}
 
 -- 7. Toggles
 EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(state) _G.BoxESPEnabled=state end})
@@ -50,6 +59,17 @@ EspTab:Toggle({
     Default=false,
     Callback=function(s)
         _G.GunESP = s
+    end
+})
+
+EspTab:Toggle({
+    Title = "Highlight ESP",
+    Default = false,
+    Callback = function(state)
+        _G.HighlightESP = state
+        for _, hl in pairs(_G.HighlightCache) do
+            if hl then hl.Enabled = state end
+        end
     end
 })
 

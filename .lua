@@ -77,7 +77,7 @@ EspTab:Toggle({
     end
 })
 
-ESP_Tab:Toggle({
+EspTab:Toggle({
     Title="Player Line ESP", 
     Default=false, 
     Callback=function(state) _G.LineESPEnabled = state end

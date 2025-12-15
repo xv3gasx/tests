@@ -234,3 +234,101 @@ RunService.RenderStepped:Connect(function()
         gunText.Visible = false
     end
 end)
+
+-- Role detection (MM2 uyumlu)
+local function detectRole(player)
+    local role = "Innocent"
+
+    local function check(container)
+        if not container then return end
+        if container:FindFirstChild("Knife") then
+            role = "Murderer"
+        elseif container:FindFirstChild("Gun") then
+            role = "Sheriff"
+        end
+    end
+
+    check(player:FindFirstChild("Backpack"))
+    if player.Character then
+        check(player.Character)
+    end
+
+    return role
+end
+
+
+-- Highlight uygula (RESET FIX BURADA)
+local function applyHighlight(player)
+    if player == LocalPlayer then return end
+    local char = player.Character
+    if not char then return end
+
+    -- eskisini temizle
+    if _G.HighlightCache[player] then
+        _G.HighlightCache[player]:Destroy()
+        _G.HighlightCache[player] = nil
+    end
+
+    local hl = Instance.new("Highlight")
+    hl.Name = "RoleHighlightESP"
+    hl.Parent = char
+    hl.Adornee = char
+
+    hl.FillTransparency = 0                 -- TAM DOLU
+    hl.OutlineTransparency = 0.4             -- BEYAZ OUTLINE
+   
+    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+
+    hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+    hl.Enabled = _G.HighlightESP
+
+    _G.HighlightCache[player] = hl
+end
+
+
+local function removeHighlight(player)
+    if _G.HighlightCache[player] then
+        _G.HighlightCache[player]:Destroy()
+        _G.HighlightCache[player] = nil
+    end
+end
+
+
+-- Player bağlantıları
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        task.wait(0.15)
+        applyHighlight(player)
+    end)
+end)
+
+Players.PlayerRemoving:Connect(removeHighlight)
+
+
+-- Mevcut oyuncular
+for _, player in ipairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        if player.Character then
+            applyHighlight(player)
+        end
+        player.CharacterAdded:Connect(function()
+            task.wait(0.15)
+            applyHighlight(player)
+        end)
+    end
+end
+
+
+-- Role değişimini hafif loop ile güncelle (optimize)
+task.spawn(function()
+    while true do
+        task.wait(0.4)
+        if not _G.HighlightESP then continue end
+
+        for player, hl in pairs(_G.HighlightCache) do
+            if hl and hl.Parent then
+                hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+            end
+        end
+    end
+end)

@@ -1,10 +1,12 @@
 -- 1. WindUI Loader
 local ok, WindUI = pcall(function()
-    return loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+    return loadstring(game:HttpGet(
+        "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
+    ))()
 end)
 if not ok or not WindUI then return warn("WindUI load failed") end
 
--- 2. Window Oluşturma
+-- 2. Window
 local Window = WindUI:CreateWindow({
     Title = "ESP Script",
     Author = "by: x.v3gas.x",
@@ -14,14 +16,16 @@ local Window = WindUI:CreateWindow({
     AutoScale = true
 })
 
--- 3. Edit Open Button
+-- 3. Open Button
 Window:EditOpenButton({
     Title = "Open ESP Menu",
     Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
-    Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
-    OnlyMobile = false,
+    Color = ColorSequence.new(
+        Color3.fromHex("FF0F7B"),
+        Color3.fromHex("F89B29")
+    ),
     Enabled = true,
     Draggable = true,
 })
@@ -36,8 +40,6 @@ local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
 -- 6. Globals
-local ESP = {}
-local currentGun = nil
 _G.BoxESPEnabled = false
 _G.GunESP = false
 _G.HighlightESP = false
@@ -45,308 +47,238 @@ _G.LineESPEnabled = false
 _G.NametagESPEnabled = false
 _G.HighlightCache = {}
 
+local currentGun = nil
+
 local ROLE_COLORS = {
     Murderer = Color3.fromRGB(255,0,0),
-    Sheriff = Color3.fromRGB(0,0,255),
+    Sheriff  = Color3.fromRGB(0,0,255),
     Innocent = Color3.fromRGB(0,255,0)
 }
 
 -- 7. Toggles
-EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(state) _G.BoxESPEnabled=state end})
-EspTab:Toggle({Title="Gun ESP", Default=false, Callback=function(state) _G.GunESP=state end})
-EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(state)
-    _G.HighlightESP=state
-    for _, hl in pairs(_G.HighlightCache) do
-        if hl then hl.Enabled = state end
+EspTab:Toggle({Title="Box ESP", Callback=function(v) _G.BoxESPEnabled=v end})
+EspTab:Toggle({Title="Gun ESP", Callback=function(v) _G.GunESP=v end})
+EspTab:Toggle({Title="Highlight ESP", Callback=function(v)
+    _G.HighlightESP=v
+    for _,hl in pairs(_G.HighlightCache) do
+        if hl then hl.Enabled=v end
     end
 end})
-EspTab:Toggle({Title="Line ESP", Default=false, Callback=function(state) _G.LineESPEnabled=state end})
-EspTab:Toggle({Title="Nametag ESP", Default=false, Callback=function(state) _G.NametagESPEnabled=state end})
+EspTab:Toggle({Title="Line ESP", Callback=function(v) _G.LineESPEnabled=v end})
+EspTab:Toggle({Title="Nametag ESP", Callback=function(v) _G.NametagESPEnabled=v end})
 
--- 8. Functions
+-- 8. Utility
 local function detectRole(player)
     local role = "Innocent"
-    local bp = player:FindFirstChild("Backpack")
-    if bp then
-        if bp:FindFirstChild("Knife") then role="Murderer"
-        elseif bp:FindFirstChild("Gun") then role="Sheriff" end
-    end
-    local char = player.Character
-    if char then
-        for _, tool in pairs(char:GetChildren()) do
-            if tool:IsA("Tool") then
-                if tool.Name=="Knife" then role="Murderer"
-                elseif tool.Name=="Gun" then role="Sheriff" end
+
+    local function scan(container)
+        if not container then return end
+        for _,v in pairs(container:GetChildren()) do
+            if v:IsA("Tool") then
+                if v.Name=="Knife" then role="Murderer" end
+                if v.Name=="Gun" then role="Sheriff" end
             end
         end
     end
+
+    scan(player:FindFirstChild("Backpack"))
+    scan(player.Character)
+
     return role
 end
 
-local function safeNewDrawing(class, props)
-    local ok, obj = pcall(function() return Drawing and Drawing.new(class) end)
+local function safeDraw(class, props)
+    local ok,obj = pcall(function()
+        return Drawing.new(class)
+    end)
     if not ok or not obj then return nil end
-    if props then
-        for k,v in pairs(props) do pcall(function() obj[k]=v end) end
+    for k,v in pairs(props or {}) do
+        pcall(function() obj[k]=v end)
     end
     return obj
 end
 
-local function worldToScreen(pos)
-    local ok, sp, onScreen = pcall(function() return Camera:WorldToViewportPoint(pos) end)
-    if not ok or not sp then return Vector2.new(0,0), false end
-    return Vector2.new(sp.X, sp.Y), onScreen
+local function w2s(pos)
+    local v,ons = Camera:WorldToViewportPoint(pos)
+    return Vector2.new(v.X,v.Y), ons
 end
 
-local function rgb(t) return Color3.fromHSV((tick()*t)%1,1,1) end
+-- ESP TABLES
+local BoxESP, LineESP, NametagESP = {}, {}, {}
 
--- Box ESP
-local BoxESP = {}
-local function createPlayerBox(player)
-    if player==LocalPlayer or BoxESP[player] then return end
-    BoxESP[player] = {Box=safeNewDrawing("Square",{Thickness=1,Filled=false,Visible=false})}
+-- BOX
+local function createBox(plr)
+    if plr==LocalPlayer or BoxESP[plr] then return end
+    BoxESP[plr] = {
+        box = safeDraw("Square",{Thickness=1,Filled=false,Visible=false})
+    }
 end
 
-local function destroyPlayerBox(player)
-    local data = BoxESP[player]
-    if not data then return end
-    if data.Box then pcall(function() data.Box:Remove() end) end
-    BoxESP[player] = nil
-end
-
--- Gun ESP
-local gunBox = safeNewDrawing("Square",{Filled=false,Visible=false,Thickness=2,Color=Color3.fromRGB(0,150,255)})
-local gunLine = safeNewDrawing("Line",{Visible=false,Thickness=2,Color=Color3.fromRGB(0,150,255)})
-local gunText = safeNewDrawing("Text",{Visible=false,Text="GUN",Size=16,Center=true,Outline=true,Color=Color3.fromRGB(0,150,255)})
-
-workspace.DescendantAdded:Connect(function(obj)
-    if obj:IsA("BasePart") and obj.Name=="GunDrop" then currentGun=obj end
-end)
-workspace.DescendantRemoving:Connect(function(obj)
-    if obj==currentGun then currentGun=nil end
-end)
-
--- Highlight ESP
-local function applyHighlight(player)
-    local char = player.Character
-    if not char or player == LocalPlayer then return end
-    if _G.HighlightCache[player] then
-        _G.HighlightCache[player]:Destroy()
-        _G.HighlightCache[player]=nil
+local function destroyBox(plr)
+    if BoxESP[plr] and BoxESP[plr].box then
+        BoxESP[plr].box:Remove()
     end
-    local hl = Instance.new("Highlight")
-    hl.Name = "RoleHighlightESP"
-    hl.Parent = char
-    hl.Adornee = char
-    hl.FillTransparency = 0
-    hl.OutlineTransparency = 0.4
-    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-    hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-    hl.Enabled = _G.HighlightESP
-    _G.HighlightCache[player] = hl
+    BoxESP[plr]=nil
 end
 
-local function removeHighlight(player)
-    if _G.HighlightCache[player] then
-        _G.HighlightCache[player]:Destroy()
-        _G.HighlightCache[player]=nil
+-- LINE
+local function createLine(plr)
+    if plr==LocalPlayer or LineESP[plr] then return end
+    LineESP[plr] = {
+        line = safeDraw("Line",{Thickness=2,Visible=false})
+    }
+end
+
+local function destroyLine(plr)
+    if LineESP[plr] and LineESP[plr].line then
+        LineESP[plr].line:Remove()
     end
+    LineESP[plr]=nil
 end
 
--- Tool değişimlerini izle (rol güncellemek için)
-local function monitorPlayerTools(player)
-    player.CharacterAdded:Connect(function(char)
-        char.ChildAdded:Connect(function(child)
-            if child:IsA("Tool") then applyHighlight(player) end
-        end)
-        char.ChildRemoved:Connect(function(child)
-            if child:IsA("Tool") then applyHighlight(player) end
-        end)
-    end)
-end
-
--- Line ESP
-local LineESP = {}
-local function createLineESP(player)
-    if player==LocalPlayer or LineESP[player] then return end
-    LineESP[player] = {Line=safeNewDrawing("Line",{Thickness=2,Visible=false})}
-end
-
-local function destroyLineESP(player)
-    if LineESP[player] then
-        pcall(function() LineESP[player].Line:Remove() end)
-        LineESP[player]=nil
-    end
-end
-
--- Nametag ESP
-local NametagESP = {}
-local function createPlayerNametag(player)
-    if not NametagESP[player] then NametagESP[player]={} end
-    if not NametagESP[player].NameTag then
-        NametagESP[player].NameTag = safeNewDrawing("Text",{
-            Text=player.Name,Size=14,Center=true,Outline=true,
-            Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent,
+-- NAMETAG
+local function createTag(plr)
+    if NametagESP[plr] then return end
+    NametagESP[plr] = {
+        text = safeDraw("Text",{
+            Text=plr.Name,
+            Size=14,
+            Center=true,
+            Outline=true,
             Visible=false
         })
-    end
+    }
 end
 
-local function destroyPlayerNametag(player)
-    if NametagESP[player] and NametagESP[player].NameTag then
-        pcall(function() NametagESP[player].NameTag:Remove() end)
-        NametagESP[player].NameTag=nil
+local function destroyTag(plr)
+    if NametagESP[plr] and NametagESP[plr].text then
+        NametagESP[plr].text:Remove()
     end
+    NametagESP[plr]=nil
 end
 
--- Player Connections
-Players.PlayerAdded:Connect(function(player)
-    createPlayerBox(player)
-    createLineESP(player)
-    createPlayerNametag(player)
-    monitorPlayerTools(player)
+-- HIGHLIGHT
+local function applyHighlight(plr)
+    if plr==LocalPlayer then return end
+    local char = plr.Character
+    if not char then return end
 
-    if player.Character then
-        task.spawn(function()
-            task.wait(0.1)
-            applyHighlight(player)
+    if _G.HighlightCache[plr] then
+        _G.HighlightCache[plr]:Destroy()
+    end
+
+    local hl = Instance.new("Highlight")
+    hl.Parent = char
+    hl.Adornee = char
+    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    hl.FillTransparency = 0
+    hl.OutlineTransparency = 0.4
+    hl.FillColor = ROLE_COLORS[detectRole(plr)]
+    hl.Enabled = _G.HighlightESP
+
+    _G.HighlightCache[plr] = hl
+end
+
+-- ROLE FIX (Tool takibi)
+local function watchTools(plr)
+    local function hook(char)
+        char.ChildAdded:Connect(function(c)
+            if c:IsA("Tool") then applyHighlight(plr) end
+        end)
+        char.ChildRemoved:Connect(function(c)
+            if c:IsA("Tool") then applyHighlight(plr) end
+        end)
+    end
+    if plr.Character then hook(plr.Character) end
+    plr.CharacterAdded:Connect(hook)
+end
+
+-- PLAYERS
+local function setup(plr)
+    createBox(plr)
+    createLine(plr)
+    createTag(plr)
+    watchTools(plr)
+
+    if plr.Character then
+        task.delay(0.1,function()
+            applyHighlight(plr)
         end)
     end
 
-    player.CharacterAdded:Connect(function()
-        task.spawn(function()
-            task.wait(0.1)
-            applyHighlight(player)
+    plr.CharacterAdded:Connect(function()
+        task.delay(0.1,function()
+            applyHighlight(plr)
         end)
     end)
-end)
-
-Players.PlayerRemoving:Connect(function(player)
-    destroyPlayerBox(player)
-    destroyLineESP(player)
-    destroyPlayerNametag(player)
-    removeHighlight(player)
-end)
-
--- Mevcut oyuncular için
-for _, player in pairs(Players:GetPlayers()) do
-    createPlayerBox(player)
-    createLineESP(player)
-    createPlayerNametag(player)
-    monitorPlayerTools(player)
-
-    if player.Character then
-        task.spawn(function()
-            task.wait(0.1)
-            applyHighlight(player)
-        end)
-    end
-
-    player.CharacterAdded:Connect(function()
-        task.spawn(function()
-            task.wait(0.1)
-            applyHighlight(player)
-        end)
-    end)
 end
 
--- 9. RenderStepped Loop
+for _,p in pairs(Players:GetPlayers()) do
+    setup(p)
+end
+
+Players.PlayerAdded:Connect(setup)
+Players.PlayerRemoving:Connect(function(p)
+    destroyBox(p)
+    destroyLine(p)
+    destroyTag(p)
+    if _G.HighlightCache[p] then
+        _G.HighlightCache[p]:Destroy()
+    end
+end)
+
+-- RENDER LOOP
 RunService.RenderStepped:Connect(function()
-    local hrp, head, top2D, bottom2D, onTop, onBottom, height, width
-    -- Box ESP
-    for player, data in pairs(BoxESP) do
-        local char = player.Character
-        hrp = char and char:FindFirstChild("HumanoidRootPart")
-        head = char and char:FindFirstChild("Head")
-        if _G.BoxESPEnabled and char and hrp and head then
-            top2D, onTop = worldToScreen(head.Position+Vector3.new(0,0.5,0))
-            bottom2D, onBottom = worldToScreen(hrp.Position-Vector3.new(0,2.5,0))
-            if onTop and onBottom then
-                height = math.abs(top2D.Y-bottom2D.Y)
-                width = height/2
-                data.Box.Position = Vector2.new(top2D.X-width/2, top2D.Y)
-                data.Box.Size = Vector2.new(width,height)
-                data.Box.Color = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-                data.Box.Visible = true
+
+    -- BOX
+    for plr,d in pairs(BoxESP) do
+        local char = plr.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local head = char and char:FindFirstChild("Head")
+        if _G.BoxESPEnabled and d.box and hrp and head then
+            local t,on1 = w2s(head.Position+Vector3.new(0,0.5,0))
+            local b,on2 = w2s(hrp.Position-Vector3.new(0,2.5,0))
+            if on1 and on2 then
+                local h = math.abs(t.Y-b.Y)
+                local w = h/2
+                d.box.Position = Vector2.new(t.X-w/2,t.Y)
+                d.box.Size = Vector2.new(w,h)
+                d.box.Color = ROLE_COLORS[detectRole(plr)]
+                d.box.Visible = true
             else
-                data.Box.Visible=false
+                d.box.Visible=false
             end
-        else
-            data.Box.Visible=false
+        elseif d.box then
+            d.box.Visible=false
         end
     end
 
-    -- Gun ESP
-    if _G.GunESP and currentGun then
-        local pos, vis = Camera:WorldToViewportPoint(currentGun.Position)
-        if vis then
-            local screenPos = Vector2.new(pos.X,pos.Y)
-            gunBox.Position=screenPos-Vector2.new(30,30)
-            gunBox.Size=Vector2.new(60,60)
-            gunBox.Visible=true
-            gunLine.From=Vector2.new(Camera.ViewportSize.X/2,0)
-            gunLine.To=screenPos
-            gunLine.Visible=true
-            gunText.Position=screenPos
-            gunText.Color=rgb(0.5)
-            gunText.Visible=true
-        else
-            gunBox.Visible=false
-            gunLine.Visible=false
-            gunText.Visible=false
-        end
-    else
-        gunBox.Visible=false
-        gunLine.Visible=false
-        gunText.Visible=false
-    end
+    -- LINE (ÜST ORTA FIX)
+    for plr,d in pairs(LineESP) do
+        local line = d.line
+        local char = plr.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
 
-    -- Line ESP
-    for player, data in pairs(LineESP) do
-        local char = player.Character
-        hrp = char and char:FindFirstChild("HumanoidRootPart")
-        head = char and char:FindFirstChild("Head")
-        if _G.LineESPEnabled and char and hrp and head then
-            top2D, onTop = worldToScreen(head.Position+Vector3.new(0,0.5,0))
-            if onTop then
-                data.Line.From=Vector2.new(Camera.ViewportSize.X/2,0)
-                data.Line.To=top2D
-                data.Line.Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-                data.Line.Visible=true
+        if _G.LineESPEnabled and line and hrp then
+            local pos,on = w2s(hrp.Position)
+            if on then
+                line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
+                line.To = pos
+                line.Color = ROLE_COLORS[detectRole(plr)]
+                line.Visible = true
             else
-                data.Line.Visible=false
+                line.Visible = false
             end
-        else
-            data.Line.Visible=false
+        elseif line then
+            line.Visible = false
         end
     end
 
-    -- Nametag ESP
-    for player,data in pairs(NametagESP) do
-        local char = player.Character
-        hrp = char and char:FindFirstChild("HumanoidRootPart")
-        head = char and char:FindFirstChild("Head")
-        if _G.NametagESPEnabled and char and hrp and head then
-            top2D, onTop = worldToScreen(head.Position+Vector3.new(0,0.5,0))
-            if onTop then
-                data.NameTag.Position = top2D - Vector2.new(0,15)
-                data.NameTag.Color = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-                data.NameTag.OutlineColor = Color3.fromRGB(0,0,0)
-                data.NameTag.Size = 14
-                data.NameTag.Visible = true
-            else
-                data.NameTag.Visible = false
-            end
-        else
-            data.NameTag.Visible = false
-        end
-    end
-
-    -- Highlight ESP
+    -- HIGHLIGHT UPDATE
     if _G.HighlightESP then
-        for player, hl in pairs(_G.HighlightCache) do
-            if hl and hl.Parent then
-                hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+        for plr,hl in pairs(_G.HighlightCache) do
+            if hl then
+                hl.FillColor = ROLE_COLORS[detectRole(plr)]
             end
         end
     end

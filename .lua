@@ -54,8 +54,8 @@ local ROLE_COLORS = {
 -- 7. Toggles
 EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(state) _G.BoxESPEnabled=state end})
 EspTab:Toggle({Title="Gun ESP", Default=false, Callback=function(state) _G.GunESP=state end})
-EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(state) 
-    _G.HighlightESP=state 
+EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(state)
+    _G.HighlightESP=state
     for _, hl in pairs(_G.HighlightCache) do
         if hl then hl.Enabled = state end
     end
@@ -105,7 +105,6 @@ local BoxESP = {}
 local function createPlayerBox(player)
     if player==LocalPlayer or BoxESP[player] then return end
     BoxESP[player] = {Box=safeNewDrawing("Square",{Thickness=1,Filled=false,Visible=false})}
-    player.CharacterAdded:Connect(function() task.wait(0.1) end)
 end
 
 local function destroyPlayerBox(player)
@@ -123,38 +122,56 @@ local gunText = safeNewDrawing("Text",{Visible=false,Text="GUN",Size=16,Center=t
 workspace.DescendantAdded:Connect(function(obj)
     if obj:IsA("BasePart") and obj.Name=="GunDrop" then currentGun=obj end
 end)
-workspace.DescendantRemoving:Connect(function(obj) if obj==currentGun then currentGun=nil end end)
+workspace.DescendantRemoving:Connect(function(obj)
+    if obj==currentGun then currentGun=nil end
+end)
 
 -- Highlight ESP
 local function applyHighlight(player)
-    if player==LocalPlayer then return end
     local char = player.Character
-    if not char then return end
-    if _G.HighlightCache[player] then _G.HighlightCache[player]:Destroy() _G.HighlightCache[player]=nil end
+    if not char or player == LocalPlayer then return end
+    if _G.HighlightCache[player] then
+        _G.HighlightCache[player]:Destroy()
+        _G.HighlightCache[player]=nil
+    end
     local hl = Instance.new("Highlight")
-    hl.Name="RoleHighlightESP"
-    hl.Parent=char
-    hl.Adornee=char
-    hl.FillTransparency=0
-    hl.OutlineTransparency=0.4
-    hl.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop
-    hl.FillColor=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-    hl.Enabled=_G.HighlightESP
-    _G.HighlightCache[player]=hl
+    hl.Name = "RoleHighlightESP"
+    hl.Parent = char
+    hl.Adornee = char
+    hl.FillTransparency = 0
+    hl.OutlineTransparency = 0.4
+    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    hl.FillColor = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+    hl.Enabled = _G.HighlightESP
+    _G.HighlightCache[player] = hl
 end
 
 local function removeHighlight(player)
-    if _G.HighlightCache[player] then _G.HighlightCache[player]:Destroy() _G.HighlightCache[player]=nil end
+    if _G.HighlightCache[player] then
+        _G.HighlightCache[player]:Destroy()
+        _G.HighlightCache[player]=nil
+    end
+end
+
+-- Tool değişimlerini izle (rol güncellemek için)
+local function monitorPlayerTools(player)
+    player.CharacterAdded:Connect(function(char)
+        char.ChildAdded:Connect(function(child)
+            if child:IsA("Tool") then applyHighlight(player) end
+        end)
+        char.ChildRemoved:Connect(function(child)
+            if child:IsA("Tool") then applyHighlight(player) end
+        end)
+    end)
 end
 
 -- Line ESP
 local LineESP = {}
 local function createLineESP(player)
-    if player==LocalPlayer or LineESP[player] then
-        return
-    end
-    LineESP[player]={Line=safeNewDrawing("Line",{Thickness=2,Visible=false})}
+    if player==LocalPlayer or LineESP[player] then return end
+    LineESP[player] = {Line=safeNewDrawing("Line",{Thickness=2,Visible=false})}
 end
+
 local function destroyLineESP(player)
     if LineESP[player] then
         pcall(function() LineESP[player].Line:Remove() end)
@@ -169,10 +186,12 @@ local function createPlayerNametag(player)
     if not NametagESP[player].NameTag then
         NametagESP[player].NameTag = safeNewDrawing("Text",{
             Text=player.Name,Size=14,Center=true,Outline=true,
-            Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent,Visible=false
+            Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent,
+            Visible=false
         })
     end
 end
+
 local function destroyPlayerNametag(player)
     if NametagESP[player] and NametagESP[player].NameTag then
         pcall(function() NametagESP[player].NameTag:Remove() end)
@@ -185,24 +204,56 @@ Players.PlayerAdded:Connect(function(player)
     createPlayerBox(player)
     createLineESP(player)
     createPlayerNametag(player)
-    player.CharacterAdded:Connect(function() task.wait(0.15) applyHighlight(player) end)
+    monitorPlayerTools(player)
+
+    if player.Character then
+        task.spawn(function()
+            task.wait(0.1)
+            applyHighlight(player)
+        end)
+    end
+
+    player.CharacterAdded:Connect(function()
+        task.spawn(function()
+            task.wait(0.1)
+            applyHighlight(player)
+        end)
+    end)
 end)
+
 Players.PlayerRemoving:Connect(function(player)
     destroyPlayerBox(player)
     destroyLineESP(player)
     destroyPlayerNametag(player)
     removeHighlight(player)
 end)
-for _,p in pairs(Players:GetPlayers()) do
-    createPlayerBox(p)
-    createLineESP(p)
-    createPlayerNametag(p)
-    if p.Character then applyHighlight(p) end
+
+-- Mevcut oyuncular için
+for _, player in pairs(Players:GetPlayers()) do
+    createPlayerBox(player)
+    createLineESP(player)
+    createPlayerNametag(player)
+    monitorPlayerTools(player)
+
+    if player.Character then
+        task.spawn(function()
+            task.wait(0.1)
+            applyHighlight(player)
+        end)
+    end
+
+    player.CharacterAdded:Connect(function()
+        task.spawn(function()
+            task.wait(0.1)
+            applyHighlight(player)
+        end)
+    end)
 end
 
 -- 9. RenderStepped Loop
 RunService.RenderStepped:Connect(function()
     local hrp, head, top2D, bottom2D, onTop, onBottom, height, width
+    -- Box ESP
     for player, data in pairs(BoxESP) do
         local char = player.Character
         hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -213,12 +264,16 @@ RunService.RenderStepped:Connect(function()
             if onTop and onBottom then
                 height = math.abs(top2D.Y-bottom2D.Y)
                 width = height/2
-                data.Box.Position=Vector2.new(top2D.X-width/2, top2D.Y)
-                data.Box.Size=Vector2.new(width,height)
-                data.Box.Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
-                data.Box.Visible=true
-            else data.Box.Visible=false end
-        else data.Box.Visible=false end
+                data.Box.Position = Vector2.new(top2D.X-width/2, top2D.Y)
+                data.Box.Size = Vector2.new(width,height)
+                data.Box.Color = ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
+                data.Box.Visible = true
+            else
+                data.Box.Visible=false
+            end
+        else
+            data.Box.Visible=false
+        end
     end
 
     -- Gun ESP
@@ -258,8 +313,12 @@ RunService.RenderStepped:Connect(function()
                 data.Line.To=top2D
                 data.Line.Color=ROLE_COLORS[detectRole(player)] or ROLE_COLORS.Innocent
                 data.Line.Visible=true
-            else data.Line.Visible=false end
-        else data.Line.Visible=false end
+            else
+                data.Line.Visible=false
+            end
+        else
+            data.Line.Visible=false
+        end
     end
 
     -- Nametag ESP

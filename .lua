@@ -335,10 +335,10 @@ RunService.RenderStepped:Connect(function()
                 data.NameTag.Size = 14
                 data.NameTag.Visible = true
             else
-                data.NameTag.Visible=false
+                data.NameTag.Visible = false
             end
         else
-            data.NameTag.Visible=false
+            data.NameTag.Visible = false
         end
     end
 

@@ -1,30 +1,13 @@
--- GÜVENLİ WINDUI LOADER (Hata Önleyici)
-local success, WindUI = pcall(function()
-    return loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-end)
+-- WindUI Loadstring (En Güncel & Çalışan Versiyon - 17 Aralık 2025)
+loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-if not success or not WindUI then
-    warn("WindUI yüklenemedi! Farklı link dene.")
-    -- Alternatif dene
-    success, WindUI = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
-    end)
-    
-    if not success or not WindUI then
-        error("WindUI tamamen yüklenemedi. Executor'un HttpGet engellenmiş olabilir.")
-        return
-    end
-end
-
-WindUI:Notify({Title="Başarılı!", Content="ESP Script Yüklendi", Duration=5, Icon="check-circle"})
-
--- Burdan sonrası senin ESP scriptin (FPS optimized hali)
+-- MM2 ESP Script (Tamamen Fixed - Toggle OFF = Anında Gizlenir + Role Detection Doğru)
 local Window = WindUI:CreateWindow({
-    Title = "MM2 ESP (Fixed)",
-    Author = "x.v3gas.x",
+    Title = "MM2 ESP (Final Fixed)",
+    Author = "x.v3gas.x / Grok Fix",
     Theme = "Dark",
     Size = UDim2.fromOffset(540, 450),
-    Folder = "MM2ESP",
+    Folder = "MM2_ESP_Final",
     AutoScale = false
 })
 
@@ -33,7 +16,7 @@ Window:EditOpenButton({
     Icon = "eye",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
-    Color = ColorSequence.new(Color3.fromHex("#FF0F7B"), Color3.fromHex("#F89B29")),
+    Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
     Enabled = true,
     Draggable = true
 })
@@ -45,13 +28,16 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
-local BoxESPEnabled = false
-local LineESPEnabled = false
-local NametagESPEnabled = false
-local GunESPEnabled = false
-local HighlightESPEnabled = false
+-- Toggles (Local değişkenler - FPS dostu)
+local BoxEnabled = false
+local LineEnabled = false
+local NameEnabled = false
+local GunEnabled = false
+local HighlightEnabled = false
 
-local BoxESP, LineESP, NametagESP = {}, {}, {}
+local BoxESP = {}
+local LineESP = {}
+local NameESP = {}
 local HighlightCache = {}
 local RoleCache = {}
 local currentGun = nil
@@ -63,117 +49,142 @@ local ROLE_COLORS = {
 }
 
 -- Toggles
-EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(v) BoxESPEnabled = v end})
-EspTab:Toggle({Title="Line ESP", Default=false, Callback=function(v) LineESPEnabled = v end})
-EspTab:Toggle({Title="Nametag ESP", Default=false, Callback=function(v) NametagESPEnabled = v end})
-EspTab:Toggle({Title="Gun ESP", Default=false, Callback=function(v) GunESPEnabled = v end})
+EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(v) BoxEnabled=v end})
+EspTab:Toggle({Title="Line ESP", Default=false, Callback=function(v) LineEnabled=v end})
+EspTab:Toggle({Title="Nametag ESP", Default=false, Callback=function(v) NameEnabled=v end})
+EspTab:Toggle({Title="Gun ESP", Default=false, Callback=function(v) GunEnabled=v end})
 EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(v)
-    HighlightESPEnabled = v
-    for _, hl in pairs(HighlightCache) do if hl then hl.Enabled = v end end
+    HighlightEnabled = v
+    for _, hl in pairs(HighlightCache) do
+        if hl then hl.Enabled = v end
+    end
 end})
 
 -- Utils
-local function safeW2S(pos)
-    local success, vec, onScreen = pcall(function() return Camera:WorldToViewportPoint(pos) end)
-    if success then return Vector2.new(vec.X, vec.Y), onScreen end
-    return Vector2.new(0,0), false
+local function w2s(pos)
+    local ok, vec, on = pcall(Camera.WorldToViewportPoint, Camera, pos)
+    return ok and Vector2.new(vec.X, vec.Y) or Vector2.new(), on or false
 end
 
 local function safeDraw(class, props)
-    local success, obj = pcall(Drawing.new, class)
-    if success and obj then
-        for k, v in pairs(props or {}) do
+    local ok, obj = pcall(Drawing.new, class)
+    if ok and obj and props then
+        for k, v in pairs(props) do
             pcall(function() obj[k] = v end)
         end
-        return obj
     end
-    return nil
+    return obj
 end
 
-local function detectRole(player)
+-- Role Detection (Knife > Gun önceliği - MM2 standart)
+local function detectRole(p)
     local role = "Innocent"
     pcall(function()
-        local function check(container)
-            if container then
-                for _, tool in ipairs(container:GetChildren()) do
-                    if tool:IsA("Tool") then
-                        if tool.Name == "Knife" then role = "Murderer" return end
-                        if tool.Name == "Gun" then role = "Sheriff" return end
-                    end
-                end
-            end
+        local backpack = p:FindFirstChild("Backpack")
+        local char = p.Character
+        if (backpack and backpack:FindFirstChild("Knife")) or (char and char:FindFirstChild("Knife")) then
+            role = "Murderer"
+        elseif (backpack and backpack:FindFirstChild("Gun")) or (char and char:FindFirstChild("Gun")) then
+            role = "Sheriff"
         end
-        check(player:FindFirstChild("Backpack"))
-        check(player.Character)
     end)
-    RoleCache[player] = role
+    RoleCache[p] = role
     return role
 end
 
--- Create ESP Objects
-local function createESP(player)
-    if player == LocalPlayer then return end
-    BoxESP[player] = { box = safeDraw("Square", {Thickness = 1, Filled = false, Visible = false}) }
-    LineESP[player] = { line = safeDraw("Line", {Thickness = 2, Visible = false}) }
-    NametagESP[player] = { text = safeDraw("Text", {Size = 14, Center = true, Outline = true, Visible = false}) }
-    detectRole(player)
+-- ESP Nesneleri Oluştur
+local function createESP(p)
+    if p == LocalPlayer then return end
+    BoxESP[p] = {box = safeDraw("Square", {Filled=false, Thickness=1, Visible=false})}
+    LineESP[p] = {line = safeDraw("Line", {Thickness=2, Visible=false})}
+    NameESP[p] = {text = safeDraw("Text", {Size=14, Center=true, Outline=true, Visible=false})}
 end
 
--- Highlight
-local function updateHighlight(player)
+-- Highlight Güncelle
+local function updateHighlight(p)
     pcall(function()
-        if player == LocalPlayer or not player.Character then return end
-        local hl = HighlightCache[player]
+        local hl = HighlightCache[p]
         if hl then hl:Destroy() end
+        if not p.Character then return end
         hl = Instance.new("Highlight")
-        hl.Parent = player.Character
-        hl.Adornee = player.Character
+        hl.Parent = p.Character
+        hl.Adornee = p.Character
         hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
         hl.FillTransparency = 0
         hl.OutlineTransparency = 0.4
-        hl.FillColor = ROLE_COLORS[RoleCache[player] or detectRole(player)]
-        hl.Enabled = HighlightESPEnabled
-        HighlightCache[player] = hl
+        hl.FillColor = ROLE_COLORS[RoleCache[p] or detectRole(p)]
+        hl.Enabled = HighlightEnabled
+        HighlightCache[p] = hl
     end)
 end
 
--- Tool Watch
-local function watchPlayer(player)
-    createESP(player)
-    updateHighlight(player)
-    player.CharacterAdded:Connect(function() updateHighlight(player) end)
-    if player.Character then
-        player.Character.ChildAdded:Connect(function(child)
-            if child:IsA("Tool") then
-                RoleCache[player] = nil
-                detectRole(player)
-                updateHighlight(player)
-            end
-        end)
-        player.Character.ChildRemoved:Connect(function(child)
-            if child:IsA("Tool") then
-                RoleCache[player] = nil
-                detectRole(player)
-                updateHighlight(player)
-            end
-        end)
-    end
+-- Oyuncu İzleme (Backpack + Character + Tool değişiklikleri)
+local function watchPlayer(p)
+    createESP(p)
+    detectRole(p)
+    updateHighlight(p)
+
+    p.CharacterAdded:Connect(function()
+        task.wait(0.1)
+        detectRole(p)
+        updateHighlight(p)
+    end)
+
+    -- Character'daki tool değişiklikleri
+    task.spawn(function()
+        if p.Character then
+            p.Character.ChildAdded:Connect(function(c)
+                if c:IsA("Tool") then
+                    RoleCache[p] = nil
+                    detectRole(p)
+                    updateHighlight(p)
+                end
+            end)
+            p.Character.ChildRemoved:Connect(function(c)
+                if c:IsA("Tool") then
+                    RoleCache[p] = nil
+                    detectRole(p)
+                    updateHighlight(p)
+                end
+            end)
+        end
+    end)
+
+    -- Backpack'teki tool değişiklikleri (önemli!)
+    p.Backpack.ChildAdded:Connect(function(c)
+        if c:IsA("Tool") then
+            RoleCache[p] = nil
+            detectRole(p)
+            updateHighlight(p)
+        end
+    end)
+    p.Backpack.ChildRemoved:Connect(function(c)
+        if c:IsA("Tool") then
+            RoleCache[p] = nil
+            detectRole(p)
+            updateHighlight(p)
+        end
+    end)
 end
 
--- Cleanup
-local function cleanup(player)
-    if BoxESP[player] and BoxESP[player].box then BoxESP[player].box:Remove() end
-    if LineESP[player] and LineESP[player].line then LineESP[player].line:Remove() end
-    if NametagESP[player] and NametagESP[player].text then NametagESP[player].text:Remove() end
-    if HighlightCache[player] then HighlightCache[player]:Destroy() end
-    BoxESP[player], LineESP[player], NametagESP[player], HighlightCache[player], RoleCache[player] = nil, nil, nil, nil, nil
+-- Temizlik
+local function cleanup(p)
+    if BoxESP[p] and BoxESP[p].box then BoxESP[p].box:Remove() end
+    BoxESP[p] = nil
+    if LineESP[p] and LineESP[p].line then LineESP[p].line:Remove() end
+    LineESP[p] = nil
+    if NameESP[p] and NameESP[p].text then NameESP[p].text:Remove() end
+    NameESP[p] = nil
+    if HighlightCache[p] then HighlightCache[p]:Destroy() end
+    HighlightCache[p] = nil
+    RoleCache[p] = nil
 end
 
 for _, p in ipairs(Players:GetPlayers()) do watchPlayer(p) end
 Players.PlayerAdded:Connect(watchPlayer)
 Players.PlayerRemoving:Connect(cleanup)
 
--- Gun Finder
+-- Gun Bulma
 task.spawn(function()
     while task.wait(0.5) do
         currentGun = workspace:FindFirstChild("GunDrop", true)
@@ -183,79 +194,99 @@ end)
 local gunBox = safeDraw("Square", {Thickness=2, Filled=false, Visible=false, Color=Color3.fromRGB(255,255,0)})
 local gunText = safeDraw("Text", {Text="GUN", Size=16, Center=true, Outline=true, Visible=false, Color=Color3.fromRGB(255,255,0)})
 
--- Render Loop
+-- Render Loop (Toggle OFF = Anında Gizlenir!)
 RunService.RenderStepped:Connect(function()
-    if not (BoxESPEnabled or LineESPEnabled or NametagESPEnabled or GunESPEnabled) then return end
+    -- Box ESP
+    for p, d in pairs(BoxESP) do
+        local char = p.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local head = char and char:FindFirstChild("Head")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
 
-    for player, data in pairs(BoxESP) do
-        local char = player.Character
-        if not char or not char:FindFirstChild("HumanoidRootPart") or not char:FindFirstChild("Head") or char:FindFirstChildOfClass("Humanoid").Health <= 0 then
-            if data.box then data.box.Visible = false end
-            if LineESP[player] then LineESP[player].line.Visible = false end
-            if NametagESP[player] then NametagESP[player].text.Visible = false end
-            continue
-        end
-
-        local role = RoleCache[player] or detectRole(player)
-        local headPos = char.Head.Position + Vector3.new(0, 0.5, 0)
-        local rootPos = char.HumanoidRootPart.Position - Vector3.new(0, 2.5, 0)
-
-        local head2D, headOn = safeW2S(headPos)
-        local root2D, rootOn = safeW2S(rootPos)
-
-        if headOn and rootOn and BoxESPEnabled then
-            local height = math.abs(head2D.Y - root2D.Y)
-            local width = height / 2
-            data.box.Position = Vector2.new(head2D.X - width/2, head2D.Y)
-            data.box.Size = Vector2.new(width, height)
-            data.box.Color = ROLE_COLORS[role]
-            data.box.Visible = true
-        elseif data.box then
-            data.box.Visible = false
-        end
-
-        if LineESPEnabled then
-            local root2D, on = safeW2S(char.HumanoidRootPart.Position)
-            if on then
-                LineESP[player].line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
-                LineESP[player].line.To = root2D
-                LineESP[player].line.Color = ROLE_COLORS[role]
-                LineESP[player].line.Visible = true
-            elseif LineESP[player] then
-                LineESP[player].line.Visible = false
-            end
-        end
-
-        if NametagESPEnabled then
-            local head2D, on = safeW2S(char.Head.Position + Vector3.new(0,1,0))
-            if on then
-                NametagESP[player].text.Text = player.Name .. " [" .. role .. "]"
-                NametagESP[player].text.Position = head2D
-                NametagESP[player].text.Color = ROLE_COLORS[role]
-                NametagESP[player].text.Visible = true
-            elseif NametagESP[player] then
-                NametagESP[player].text.Visible = false
+        if not BoxEnabled or not (hrp and head and hum and hum.Health > 0) then
+            d.box.Visible = false
+        else
+            local top, onTop = w2s(head.Position + Vector3.new(0, 0.5, 0))
+            local bot, onBot = w2s(hrp.Position - Vector3.new(0, 2.5, 0))
+            if onTop and onBot then
+                local height = math.abs(top.Y - bot.Y)
+                local width = height / 2
+                d.box.Position = Vector2.new(top.X - width / 2, top.Y)
+                d.box.Size = Vector2.new(width, height)
+                d.box.Color = ROLE_COLORS[RoleCache[p] or detectRole(p)]
+                d.box.Visible = true
+            else
+                d.box.Visible = false
             end
         end
     end
 
-    if GunESPEnabled and currentGun then
-        local pos, on = safeW2S(currentGun.Position)
+    -- Line ESP
+    for p, d in pairs(LineESP) do
+        local char = p.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+
+        if not LineEnabled or not (hrp and hum and hum.Health > 0) then
+            d.line.Visible = false
+        else
+            local pos, on = w2s(hrp.Position)
+            if on then
+                d.line.From = Vector2.new(Camera.ViewportSize.X / 2, 0)
+                d.line.To = pos
+                d.line.Color = ROLE_COLORS[RoleCache[p] or detectRole(p)]
+                d.line.Visible = true
+            else
+                d.line.Visible = false
+            end
+        end
+    end
+
+    -- Nametag ESP
+    for p, d in pairs(NameESP) do
+        local char = p.Character
+        local head = char and char:FindFirstChild("Head")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+
+        if not NameEnabled or not (head and hum and hum.Health > 0) then
+            d.text.Visible = false
+        else
+            local pos, on = w2s(head.Position + Vector3.new(0, 1, 0))
+            if on then
+                local role = RoleCache[p] or detectRole(p)
+                d.text.Text = p.Name .. " [" .. role .. "]"
+                d.text.Position = pos
+                d.text.Color = ROLE_COLORS[role]
+                d.text.Visible = true
+            else
+                d.text.Visible = false
+            end
+        end
+    end
+
+    -- Gun ESP
+    if GunEnabled and currentGun then
+        local pos, on = w2s(currentGun.Position)
         if on then
-            local size = 30
-            gunBox.Position = pos - Vector2.new(size/2, size/2)
-            gunBox.Size = Vector2.new(size, size)
+            local sz = 30
+            gunBox.Position = pos - Vector2.new(sz/2, sz/2)
+            gunBox.Size = Vector2.new(sz, sz)
             gunBox.Visible = true
-            gunText.Position = pos + Vector2.new(0, -20)
+            gunText.Position = pos + Vector2.new(0, -sz/2 - 10)
             gunText.Visible = true
         else
             gunBox.Visible = false
             gunText.Visible = false
         end
     else
-        if gunBox then gunBox.Visible = false end
-        if gunText then gunText.Visible = false end
+        gunBox.Visible = false
+        gunText.Visible = false
     end
 end)
 
-print("MM2 ESP Script Başarıyla Yüklendi!")
+WindUI:Notify({
+    Title = "Başarılı!",
+    Content = "ESP Yüklendi - Toggle OFF = Anında Gizlenir",
+    Duration = 6,
+    Icon = "check"
+})

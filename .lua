@@ -1,17 +1,15 @@
--- WINDUI LIBRARY YÜKLE (DIST - WINDUI RETURN EDER)
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 if not WindUI then
-    warn("WindUI yüklenemedi! Executor HttpGet'i kontrol et veya VPN dene.")
+    warn("WindUI yüklenemedi! Link çalışmıyor olabilir, alternatif dene.")
     return
 end
 
-WindUI:Notify({Title="Yüklendi!", Content="MM2 ESP Aktif - Anında Role!", Duration=5, Icon="check"})
+WindUI:Notify({Title="Başarılı!", Content="MM2 ESP Aktif!", Duration=5, Icon="check"})
 
--- ESP GUI
 local Window = WindUI:CreateWindow({
-    Title = "MM2 ESP (Çalışan Final)",
-    Author = "Grok",
+    Title = "MM2 ESP",
+    Author = "x.v3gas.x",
     Theme = "Dark",
     Size = UDim2.fromOffset(540, 450),
     Folder = "MM2ESP",
@@ -50,11 +48,11 @@ local currentGun = nil
 
 local ROLE_COLORS = {Murderer = Color3.fromRGB(255,0,0), Sheriff = Color3.fromRGB(0,0,255), Innocent = Color3.fromRGB(0,255,0)}
 
-EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(v) BoxEnabled = v end})
-EspTab:Toggle({Title="Line ESP", Default=false, Callback=function(v) LineEnabled = v end})
-EspTab:Toggle({Title="Nametag ESP", Default=false, Callback=function(v) NameEnabled = v end})
-EspTab:Toggle({Title="Gun ESP (Rainbow + Mavi GUN)", Default=false, Callback=function(v) GunEnabled = v end})
-EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(v) HighlightEnabled = v; for _,hl in pairs(HighlightCache) do if hl then hl.Enabled = v end end end})
+EspTab:Toggle({Title="Box ESP", Default=false, Callback=function(v) BoxEnabled=v end})
+EspTab:Toggle({Title="Line ESP", Default=false, Callback=function(v) LineEnabled=v end})
+EspTab:Toggle({Title="Nametag ESP", Default=false, Callback=function(v) NameEnabled=v end})
+EspTab:Toggle({Title="Gun ESP (Rainbow)", Default=false, Callback=function(v) GunEnabled=v end})
+EspTab:Toggle({Title="Highlight ESP", Default=false, Callback=function(v) HighlightEnabled=v; for _,hl in pairs(HighlightCache) do if hl then hl.Enabled=v end end end})
 
 local function w2s(pos)
     local ok, vec, on = pcall(Camera.WorldToViewportPoint, Camera, pos)
@@ -63,29 +61,20 @@ end
 
 local function safeDraw(class, props)
     local ok, obj = pcall(Drawing.new, class)
-    if ok and obj and props then for k,v in pairs(props) do pcall(function() obj[k] = v end) end end
+    if ok and obj and props then for k,v in pairs(props) do pcall(function() obj[k]=v end) end end
     return obj
 end
 
--- Anında Role Detection
-local rolesFolder = workspace:WaitForChild("Ignored"):WaitForChild("Roles", 10)
+local rolesFolder = workspace:FindFirstChild("Ignored") and workspace.Ignored:FindFirstChild("Roles")
 if rolesFolder then
     for _, obj in ipairs(rolesFolder:GetChildren()) do
-        if obj:IsA("ObjectValue") and obj.Value then
-            RoleCache[obj.Value] = obj.Name
-        end
+        if obj:IsA("ObjectValue") and obj.Value then RoleCache[obj.Value] = obj.Name end
     end
-
     rolesFolder.ChildAdded:Connect(function(obj)
-        if obj:IsA("ObjectValue") and obj.Value then
-            RoleCache[obj.Value] = obj.Name
-        end
+        if obj:IsA("ObjectValue") and obj.Value then RoleCache[obj.Value] = obj.Name end
     end)
-
     rolesFolder.ChildRemoved:Connect(function(obj)
-        if obj:IsA("ObjectValue") and obj.Value then
-            RoleCache[obj.Value] = "Innocent"
-        end
+        if obj:IsA("ObjectValue") and obj.Value then RoleCache[obj.Value] = "Innocent" end
     end)
 end
 
@@ -93,9 +82,9 @@ local function getRole(p) return RoleCache[p] or "Innocent" end
 
 local function createESP(p)
     if p == LocalPlayer then return end
-    BoxESP[p] = {box = safeDraw("Square", {Filled = false, Thickness = 2, Visible = false})}
-    LineESP[p] = {line = safeDraw("Line", {Thickness = 3, Visible = false})}
-    NameESP[p] = {text = safeDraw("Text", {Size = 16, Center = true, Outline = true, OutlineColor = Color3.new(0,0,0), Visible = false})}
+    BoxESP[p] = {box = safeDraw("Square", {Filled=false, Thickness=2, Visible=false})}
+    LineESP[p] = {line = safeDraw("Line", {Thickness=3, Visible=false})}
+    NameESP[p] = {text = safeDraw("Text", {Size=16, Center=true, Outline=true, OutlineColor=Color3.new(0,0,0), Visible=false})}
 end
 
 local function updateHighlight(p)
@@ -141,9 +130,9 @@ task.spawn(function()
     end
 end)
 
-local gunBox = safeDraw("Square", {Thickness = 3, Filled = false, Visible = false})
-local gunLine = safeDraw("Line", {Thickness = 3, Visible = false})
-local gunText = safeDraw("Text", {Text = "GUN", Size = 20, Center = true, Outline = true, OutlineColor = Color3.new(0,0,0), Color = Color3.new(0,0,255), Visible = false})
+local gunBox = safeDraw("Square", {Thickness=3, Filled=false, Visible=false})
+local gunLine = safeDraw("Line", {Thickness=3, Visible=false})
+local gunText = safeDraw("Text", {Text="GUN", Size=20, Center=true, Outline=true, OutlineColor=Color3.new(0,0,0), Color=Color3.new(0,0,255), Visible=false})
 
 local hue = 0
 RunService.Heartbeat:Connect(function(dt)
@@ -229,5 +218,3 @@ RunService.RenderStepped:Connect(function()
         gunText.Visible = false
     end
 end)
-
-print("ESP Başarıyla Yüklendi - Hata Yok!")

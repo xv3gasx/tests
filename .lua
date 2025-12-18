@@ -2,7 +2,7 @@
 -- Özellikler: Role Renkli Highlight/Box/Line/Nametag, Rainbow Gun Box/Line + Mavi GUN Text (Siyah Stroke), 0 FPS Drop, Yeni Round Yenileme
 
 -- WindUI Loader (2025 Güncel & Çalışan - Repo'dan Doğrulandı)
-local WindUI = local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 -- Loader Hata Kontrolü
 if not WindUI then
     warn("WindUI yüklenemedi! Executor'un HttpGet'i kontrol et.")

@@ -24,7 +24,7 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     Size = UDim2.fromOffset(550, 460),
     Folder = "GunGroundsFFA",
-    AutoScale = false
+    AutoScale = true
 })
 
 Window:EditOpenButton({

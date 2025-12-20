@@ -6,20 +6,13 @@ if game.PlaceId ~= ALLOWED_PLACEID then
     )
     return
 end
-
 --========================================================
 -- 1) WIND UI LOADER
 --========================================================
-local ok, WindUI = pcall(function()
-    return loadstring(game:HttpGet(
-        "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
-    ))()
-end)
-
-if not ok or not WindUI then
-    warn("WindUI load failed")
-    return
-end
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
 
 WindUI:Notify({
     Title = "Loaded",
@@ -55,7 +48,7 @@ local ESP_Tab   = Window:Tab({ Title = "ESP", Icon = "app-window" })
 local Aim_Tab   = Window:Tab({ Title = "Aim", Icon = "target" })
 local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 local Crosshair_Tab = Window:Tab({ Title = "Crosshair", Icon = "crosshair" })
-local Keybind_Tab = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
+local Settings_Tab = Window:Tab({ Title = "Settings", Icon = "settings" })
 
 --========================================================
 -- 4) SERVICES + GLOBALS
@@ -333,13 +326,11 @@ RunService.Stepped:Connect(function()
     end
 end)
 
-
-local UIKeybind = Keybind_Tab:Keybind({
-    Title = "Keybind",
+Settings_Tab:Keybind({
+    Title = "Toggle UI",
     Desc = "Keybind to open ui",
     Value = "G",
     Callback = function(v)
         Window:SetToggleKey(Enum.KeyCode[v])
     end
 })
-

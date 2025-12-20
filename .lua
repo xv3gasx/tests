@@ -55,7 +55,7 @@ local ESP_Tab   = Window:Tab({ Title = "ESP", Icon = "app-window" })
 local Aim_Tab   = Window:Tab({ Title = "Aim", Icon = "target" })
 local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 local Crosshair_Tab = Window:Tab({ Title = "Crosshair", Icon = "crosshair" })
-local Keybind = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
+local Keybind_Tab = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
 
 --========================================================
 -- 4) SERVICES + GLOBALS
@@ -334,7 +334,7 @@ RunService.Stepped:Connect(function()
 end)
 
 
-local Keybind = Tab:Keybind({
+local UIKeybind = Keybind_Tab:Keybind({
     Title = "Keybind",
     Desc = "Keybind to open ui",
     Value = "G",
@@ -342,3 +342,4 @@ local Keybind = Tab:Keybind({
         Window:SetToggleKey(Enum.KeyCode[v])
     end
 })
+

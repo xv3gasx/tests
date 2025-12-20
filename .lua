@@ -55,7 +55,7 @@ local ESP_Tab   = Window:Tab({ Title = "ESP", Icon = "app-window" })
 local Aim_Tab   = Window:Tab({ Title = "Aim", Icon = "target" })
 local Local_Tab = Window:Tab({ Title = "Local Player", Icon = "user" })
 local Crosshair_Tab = Window:Tab({ Title = "Crosshair", Icon = "crosshair" })
-local Keybind   = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
+local Keybind = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
 
 --========================================================
 -- 4) SERVICES + GLOBALS
@@ -332,4 +332,5 @@ RunService.Stepped:Connect(function()
         end
     end
 end)
+
 

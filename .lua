@@ -48,15 +48,6 @@ Window:EditOpenButton({
     Draggable = true
 })
 
-local Keybind = Tab:Keybind({
-    Title = "Keybind",
-    Desc = "Keybind to open ui",
-    Value = "G",
-    Callback = function(v)
-        Window:SetToggleKey(Enum.KeyCode[v])
-    end
-})
-
 --========================================================
 -- 3) TABS
 --========================================================
@@ -343,6 +334,11 @@ RunService.Stepped:Connect(function()
 end)
 
 
-
-
-
+local Keybind = Tab:Keybind({
+    Title = "Keybind",
+    Desc = "Keybind to open ui",
+    Value = "G",
+    Callback = function(v)
+        Window:SetToggleKey(Enum.KeyCode[v])
+    end
+})

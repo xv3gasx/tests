@@ -44,6 +44,7 @@ Window:EditOpenButton({
 --========================================================
 local ESP_Tab = Window:Tab({Title="ESP", Icon="eye"})
 local Aim_Tab = Window:Tab({Title="Aim", Icon="target"})
+local LocalPlayer_Tab = Window:Tab({Title="LocalPlayer", Icon="person"})
 
 --========================================================
 -- SERVICES
@@ -52,7 +53,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
-
+local UIS = game:GetService("UserInputService")
 --========================================================
 -- GLOBALS
 --========================================================
@@ -67,6 +68,9 @@ _G.SILENT_AIM  = false
 _G.AIM_FOV     = 150
 _G.AIM_VISIBLE = true
 
+_G.WalkSpeed = 16
+_G.Noclip = false
+_G.InfiniteJump = false
 --========================================================
 -- DRAWING SAFE
 --========================================================
@@ -96,6 +100,42 @@ Aim_Tab:Slider({
     Callback=function(v) _G.AIM_FOV=v end
 })
 Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
+
+LocalPlayer_Tab:Slider({
+    Title = "WalkSpeed",
+    Step = 1,
+    Value = {
+        Min = 16,
+        Max = 500,
+        Default = _G.WalkSpeed
+    },
+    Callback = function(val)
+        _G.WalkSpeed = val
+        local char = LocalPlayer.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum.WalkSpeed = val
+            end
+        end
+    end
+})
+
+LocalPlayer_Tab:Toggle({
+    Title = "Noclip",
+    Default = false,
+    Callback = function(state)
+        _G.Noclip = state
+    end
+})
+
+LocalPlayer_Tab:Toggle({
+    Title = "Infinite Jump",
+    Default = false,
+    Callback = function(state)
+        _G.InfiniteJump = state
+    end
+})
 
 --========================================================
 -- TEAM CHECK HELPER
@@ -289,107 +329,7 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- 1. WindUI Loader
-local ok, WindUI = pcall(function()
-    return loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-end)
-if not ok or not WindUI then return warn("WindUI yüklenemedi!") end
-
-WindUI:Notify({Title="LocalPlayer", Content="Yüklendi!", Duration=3, Icon="check"})
-
--- 2. UI Window
-local Window = WindUI:CreateWindow({
-    Title = "LocalPlayer Menu",
-    Author = "x.v3gas.x",
-    Theme = "Dark",
-    Size = UDim2.fromOffset(400, 300)
-})
-
--- 3. Edit Open Button
-Window:EditOpenButton({
-    Title = "Open LocalPlayer Menu",
-    Icon = "person",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 2,
-    Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
-    OnlyMobile = false,
-    Enabled = true,
-    Draggable = true
-})
-
--- 4. Services
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
-
--- 5. Tabs
-local LocalPlayer_Tab = Window:Tab({Title="LocalPlayer", Icon="person"})
-
--- 6. Globals
-_G.WalkSpeed = 16
-_G.Noclip = false
-_G.InfiniteJump = false
-
--- 7. Slider / Toggles
-
-LocalPlayer_Tab:Slider({
-    Title = "WalkSpeed",
-    Step = 1,
-    Value = {
-        Min = 16,
-        Max = 500,
-        Default = _G.WalkSpeed
-    },
-    Callback = function(val)
-        _G.WalkSpeed = val
-        local char = LocalPlayer.Character
-        if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum.WalkSpeed = val
-            end
-        end
-    end
-})
-
-LocalPlayer_Tab:Toggle({
-    Title = "Noclip",
-    Default = false,
-    Callback = function(state)
-        _G.Noclip = state
-    end
-})
-
-LocalPlayer_Tab:Toggle({
-    Title = "Infinite Jump",
-    Default = false,
-    Callback = function(state)
-        _G.InfiniteJump = state
-    end
-})
-
--- 8. Loops / Connections
-
+-- Local Player
 RunService.Stepped:Connect(function()
     local char = LocalPlayer.Character
     if char then

@@ -14,7 +14,7 @@ end
 
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Blox Strike ESP + Aim",
+    Content = "Blox Strike ESP + Aim + Local Player",
     Duration = 3,
     Icon = "check"
 })

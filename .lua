@@ -9,7 +9,7 @@ if not ok or not WindUI then
 end
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Counter Bloxment (Anti-Cheat Bypass)",
+    Content = "Counter Blox - ESP + Movement (Bypass Çalışır)",
     Duration = 3,
     Icon = "check"
 })
@@ -32,7 +32,7 @@ Window:EditOpenButton({
 
 local ESP_Tab = Window:Tab({Title="ESP", Icon="eye"})
 local Aim_Tab = Window:Tab({Title="Aim", Icon="target"})
-local Movement_Tab = Window:Tab({Title="Movement", Icon="user"})  -- Yeni Tab
+local Movement_Tab = Window:Tab({Title="Movement", Icon="user"})
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -50,9 +50,9 @@ _G.SILENT_AIM = false
 _G.AIM_FOV = 150
 _G.AIM_VISIBLE = true
 
--- Movement Globals (Anti-Cheat Bypass)
+-- Movement Globals (Bypass)
 _G.WalkSpeedEnabled = false
-_G.WalkSpeedValue = 30
+_G.WalkSpeedValue = 50  -- 16 normal, 50 hızlı, 100 çok hızlı
 _G.NoclipEnabled = false
 _G.InfJumpEnabled = false
 
@@ -82,12 +82,12 @@ Aim_Tab:Slider({
 })
 Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
 
--- Movement Toggle'lar (Anti-Cheat Bypass)
+-- Movement Toggle'lar (Bypass)
 Movement_Tab:Toggle({Title="Walkspeed (Bypass)", Default=false, Callback=function(v) _G.WalkSpeedEnabled = v end})
 Movement_Tab:Slider({
     Title="Walkspeed Value",
     Step=1,
-    Value={Min=16,Max=100,Default=30},
+    Value={Min=16,Max=150,Default=50},
     Callback=function(v) _G.WalkSpeedValue = v end
 })
 Movement_Tab:Toggle({Title="Noclip", Default=false, Callback=function(v) _G.NoclipEnabled = v end})
@@ -185,23 +185,25 @@ local function getTarget()
 end
 
 -- Anti-Cheat Bypass Movement (Counter Blox'ta Çalışır)
-local WalkSpeedConnection
-local function toggleWalkSpeed()
-    if WalkSpeedConnection then WalkSpeedConnection:Disconnect() end
-    if _G.WalkSpeedEnabled then
-        local speed = (_G.WalkSpeedValue - 16) * 0.7  -- Normal hissettir (16 = 0, 100 = yüksek)
-        WalkSpeedConnection = RunService.Stepped:Connect(function(_, dt)
-            local char = LocalPlayer.Character
-            if char and char:FindFirstChild("HumanoidRootPart") then
-                local hrp = char.HumanoidRootPart
-                local move = LocalPlayer:GetMouse().Hit.LookVector * speed * dt * 50
-                if UserInputService:IsKeyDown(Enum.KeyCode.W) then hrp.CFrame = hrp.CFrame + move end
-                if UserInputService:IsKeyDown(Enum.KeyCode.S) then hrp.CFrame = hrp.CFrame - move end
-                if UserInputService:IsKeyDown(Enum.KeyCode.A) then hrp.CFrame = hrp.CFrame - hrp.CFrame.RightVector * speed * dt * 50 end
-                if UserInputService:IsKeyDown(Enum.KeyCode.D) then hrp.CFrame = hrp.CFrame + hrp.CFrame.RightVector * speed * dt * 50 end
+local speedConnection
+local function updateWalkSpeed()
+    if speedConnection then speedConnection:Disconnect() end
+    if not _G.WalkSpeedEnabled then return end
+    local speedMultiplier = (_G.WalkSpeedValue - 16) / 10  -- 16 = normal, 100 = çok hızlı
+    speedConnection = RunService.Stepped:Connect(function(_, dt)
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local hrp = char.HumanoidRootPart
+            local moveVector = Vector3.new()
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveVector = moveVector + Camera.CFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveVector = moveVector - Camera.CFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveVector = moveVector - Camera.CFrame.RightVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveVector = moveVector + Camera.CFrame.RightVector end
+            if moveVector.Magnitude > 0 then
+                hrp.Velocity = moveVector.Unit * _G.WalkSpeedValue * 5 * dt * 50
             end
-        end)
-    end
+        end
+    end)
 end
 
 -- Noclip
@@ -218,21 +220,21 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- Infinite Jump (Velocity ile - Bug Yok, Mobile Uyumlu)
+-- Infinite Jump (Velocity ile - Bug Yok)
 UserInputService.JumpRequest:Connect(function()
     if _G.InfJumpEnabled then
         local char = LocalPlayer.Character
         if char then
             local hrp = char:FindFirstChild("HumanoidRootPart")
             if hrp then
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
+                hrp.Velocity = Vector3.new(hrp.Velocity.X, 60, hrp.Velocity.Z)
             end
         end
     end
 end)
 
 -- Toggle Bağlantıları
-Movement_Tab:FindFirstChild("Walkspeed").Callback = toggleWalkSpeed  -- Toggle değişince çalıştır
+Movement_Tab:FindFirstChild("Walkspeed").Callback = updateWalkSpeed
 
 RunService.RenderStepped:Connect(function()
     -- AIM FOV

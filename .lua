@@ -14,7 +14,7 @@ end
 
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Blox Strike ESP",
+    Content = "Blox Strike ESP + Aim",
     Duration = 3,
     Icon = "check"
 })
@@ -40,9 +40,10 @@ Window:EditOpenButton({
 })
 
 --========================================================
--- TAB
+-- TABS
 --========================================================
 local ESP_Tab = Window:Tab({Title="ESP", Icon="eye"})
+local Aim_Tab = Window:Tab({Title="Aim", Icon="target"})
 
 --========================================================
 -- SERVICES
@@ -62,6 +63,10 @@ _G.ESP_NAME      = false
 _G.ESP_HEALTH    = false
 _G.ESP_HIGHLIGHT = false
 
+_G.SILENT_AIM  = false
+_G.AIM_FOV     = 150
+_G.AIM_VISIBLE = true
+
 --========================================================
 -- DRAWING SAFE
 --========================================================
@@ -74,29 +79,30 @@ local function dnew(class, props)
 end
 
 --========================================================
--- UI (TEAM CHECK EN ÜSTE)
+-- UI
 --========================================================
-ESP_Tab:Toggle({
-    Title="Team Check",
-    Callback=function(v) _G.TEAM_CHECK = v end
-})
-
+ESP_Tab:Toggle({Title="Team Check", Callback=function(v) _G.TEAM_CHECK = v end})
 ESP_Tab:Toggle({Title="Line ESP", Callback=function(v) _G.ESP_LINE=v end})
 ESP_Tab:Toggle({Title="Box ESP", Callback=function(v) _G.ESP_BOX=v end})
 ESP_Tab:Toggle({Title="NameTag ESP", Callback=function(v) _G.ESP_NAME=v end})
 ESP_Tab:Toggle({Title="Health ESP", Callback=function(v) _G.ESP_HEALTH=v end})
 ESP_Tab:Toggle({Title="Highlight ESP", Callback=function(v) _G.ESP_HIGHLIGHT=v end})
 
+Aim_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
+Aim_Tab:Slider({
+    Title="Aim FOV",
+    Step=5,
+    Value={Min=50,Max=500,Default=150},
+    Callback=function(v) _G.AIM_FOV=v end
+})
+Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
+
 --========================================================
 -- TEAM CHECK HELPER
 --========================================================
 local function isEnemy(plr)
-    if not _G.TEAM_CHECK then
-        return true
-    end
-    if LocalPlayer.Team == nil or plr.Team == nil then
-        return true
-    end
+    if not _G.TEAM_CHECK then return true end
+    if LocalPlayer.Team == nil or plr.Team == nil then return true end
     return plr.Team ~= LocalPlayer.Team
 end
 
@@ -111,8 +117,7 @@ local function isVisible(part, character)
     params.FilterType = Enum.RaycastFilterType.Blacklist
     params.FilterDescendantsInstances = {LocalPlayer.Character, character}
 
-    local ray = workspace:Raycast(origin, direction, params)
-    return ray == nil
+    return workspace:Raycast(origin, direction, params) == nil
 end
 
 --========================================================
@@ -171,91 +176,113 @@ Players.PlayerAdded:Connect(createESP)
 Players.PlayerRemoving:Connect(removeESP)
 
 --========================================================
--- HEALTH COLOR (GREEN / YELLOW / RED)
+-- HEALTH COLOR
 --========================================================
 local function getHealthColor(hp)
-    if hp > 0.66 then
-        return Color3.fromRGB(0,255,0)      -- green
-    elseif hp > 0.33 then
-        return Color3.fromRGB(255,255,0)    -- yellow
-    else
-        return Color3.fromRGB(255,0,0)      -- red
+    if hp > 0.66 then return Color3.fromRGB(0,255,0)
+    elseif hp > 0.33 then return Color3.fromRGB(255,255,0)
+    else return Color3.fromRGB(255,0,0)
     end
+end
+
+--========================================================
+-- AIM FOV CIRCLE
+--========================================================
+local FOV = dnew("Circle",{Thickness=2,NumSides=64,Filled=false,Color=Color3.fromRGB(255,255,255),Visible=false})
+
+local function getTarget()
+    local best,dist=nil,_G.AIM_FOV
+    for _,p in pairs(Players:GetPlayers()) do
+        if p~=LocalPlayer and isEnemy(p) then
+            local char = p.Character
+            local head = char and char:FindFirstChild("Head")
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if head and hum and hum.Health>0 then
+                if _G.AIM_VISIBLE and not isVisible(head,char) then continue end
+                local pos,on = Camera:WorldToViewportPoint(head.Position)
+                if on then
+                    local d = (Vector2.new(pos.X,pos.Y) - Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.Y/2)).Magnitude
+                    if d<dist then dist=d best=head end
+                end
+            end
+        end
+    end
+    return best
 end
 
 --========================================================
 -- RENDER LOOP
 --========================================================
 RunService.RenderStepped:Connect(function()
+    -- AIM FOV
+    FOV.Visible = _G.SILENT_AIM
+    FOV.Radius = _G.AIM_FOV
+    FOV.Position = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+
+    if _G.SILENT_AIM then
+        local t = getTarget()
+        if t then
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, t.Position)
+        end
+    end
+
+    -- ESP
     for plr,data in pairs(ESP) do
         local char = plr.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         local head = char and char:FindFirstChild("Head")
         local hum = char and char:FindFirstChildOfClass("Humanoid")
 
-        if not hrp or not head or not hum or hum.Health <= 0 or not isEnemy(plr) then
+        if not hrp or not head or not hum or hum.Health<=0 or not isEnemy(plr) then
             for _,v in pairs(data) do
-                if typeof(v) ~= "Instance" then v.Visible = false end
+                if typeof(v)~="Instance" then v.Visible=false end
             end
-            if data.Highlight then data.Highlight.Enabled = false end
+            if data.Highlight then data.Highlight.Enabled=false end
             continue
         end
 
-        local hrpPos, onscreen = Camera:WorldToViewportPoint(hrp.Position)
+        local hrpPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
         local headPos = Camera:WorldToViewportPoint(head.Position)
+        local visible = isVisible(head,char)
 
-        if not onscreen then
-            for _,v in pairs(data) do
-                if typeof(v) ~= "Instance" then v.Visible = false end
-            end
-            if data.Highlight then data.Highlight.Enabled = false end
-            continue
-        end
+        local height = math.abs(headPos.Y-hrpPos.Y)*2
+        local width = height/2
 
-        local height = math.abs(headPos.Y - hrpPos.Y) * 2
-        local width = height / 2
-
-        -- LINE (TOP)
-        data.Line.Visible = _G.ESP_LINE
+        -- LINE
+        data.Line.Visible = _G.ESP_LINE and visible
         if _G.ESP_LINE then
-            data.Line.From = Vector2.new(Camera.ViewportSize.X/2, 0)
-            data.Line.To = Vector2.new(hrpPos.X, hrpPos.Y)
+            data.Line.From = Vector2.new(Camera.ViewportSize.X/2,0)
+            data.Line.To = Vector2.new(hrpPos.X,hrpPos.Y)
         end
 
         -- BOX
-        data.Box.Visible = _G.ESP_BOX
+        data.Box.Visible = _G.ESP_BOX and visible
         if _G.ESP_BOX then
-            data.Box.Size = Vector2.new(width, height)
-            data.Box.Position = Vector2.new(hrpPos.X - width/2, hrpPos.Y - height/2)
+            data.Box.Size = Vector2.new(width,height)
+            data.Box.Position = Vector2.new(hrpPos.X-width/2,hrpPos.Y-height/2)
         end
 
         -- NAME
-        data.Name.Visible = _G.ESP_NAME
+        data.Name.Visible = _G.ESP_NAME and visible
         if _G.ESP_NAME then
             data.Name.Text = plr.Name
-            data.Name.Position = Vector2.new(hrpPos.X, hrpPos.Y - height/2 - 14)
+            data.Name.Position = Vector2.new(hrpPos.X,hrpPos.Y-height/2-14)
         end
 
-        -- HEALTH (THRESHOLD COLORS)
-        data.HealthBar.Visible = _G.ESP_HEALTH
+        -- HEALTH
+        data.HealthBar.Visible = _G.ESP_HEALTH and visible
         if _G.ESP_HEALTH then
-            local hp = hum.Health / hum.MaxHealth
+            local hp = hum.Health/hum.MaxHealth
             data.HealthBar.Color = getHealthColor(hp)
-            data.HealthBar.From = Vector2.new(hrpPos.X - width/2 - 6, hrpPos.Y + height/2)
-            data.HealthBar.To = Vector2.new(
-                hrpPos.X - width/2 - 6,
-                hrpPos.Y + height/2 - height*hp
-            )
+            data.HealthBar.From = Vector2.new(hrpPos.X-width/2-6, hrpPos.Y+height/2)
+            data.HealthBar.To = Vector2.new(hrpPos.X-width/2-6, hrpPos.Y+height/2-height*hp)
         end
 
-        -- HIGHLIGHT (VISIBILITY BASED)
+        -- HIGHLIGHT
         if data.Highlight then
             if _G.ESP_HIGHLIGHT then
-                local visible = isVisible(head, char)
-                data.Highlight.FillColor = visible
-                    and Color3.fromRGB(0,255,0)
-                    or Color3.fromRGB(255,0,0)
-                data.Highlight.Enabled = true
+                data.Highlight.FillColor = visible and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
+                data.Highlight.Enabled = visible
             else
                 data.Highlight.Enabled = false
             end

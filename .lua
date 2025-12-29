@@ -10,7 +10,7 @@ if not ok or not WindUI then return end
 
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Blox Strike ESP + Aim",
+    Content = "Blox Strike eeeSP + Aim",
     Duration = 3,
     Icon = "check"
 })

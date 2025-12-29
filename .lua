@@ -14,7 +14,7 @@ end
 
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Blox Strike ESP + Aim + Local Player",
+    Content = "Blox Strike ESP + Aim",
     Duration = 3,
     Icon = "check"
 })
@@ -44,7 +44,6 @@ Window:EditOpenButton({
 --========================================================
 local ESP_Tab = Window:Tab({Title="ESP", Icon="eye"})
 local Aim_Tab = Window:Tab({Title="Aim", Icon="target"})
-local LocalPlayer_Tab = Window:Tab({Title="LocalPlayer", Icon="person"})
 
 --========================================================
 -- SERVICES
@@ -53,7 +52,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
-local UIS = game:GetService("UserInputService")
+
 --========================================================
 -- GLOBALS
 --========================================================
@@ -68,9 +67,6 @@ _G.SILENT_AIM  = false
 _G.AIM_FOV     = 150
 _G.AIM_VISIBLE = true
 
-_G.WalkSpeed = 16
-_G.Noclip = false
-_G.InfiniteJump = false
 --========================================================
 -- DRAWING SAFE
 --========================================================
@@ -100,42 +96,6 @@ Aim_Tab:Slider({
     Callback=function(v) _G.AIM_FOV=v end
 })
 Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
-
-LocalPlayer_Tab:Slider({
-    Title = "WalkSpeed",
-    Step = 1,
-    Value = {
-        Min = 16,
-        Max = 500,
-        Default = _G.WalkSpeed
-    },
-    Callback = function(val)
-        _G.WalkSpeed = val
-        local char = LocalPlayer.Character
-        if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum.WalkSpeed = val
-            end
-        end
-    end
-})
-
-LocalPlayer_Tab:Toggle({
-    Title = "Noclip",
-    Default = false,
-    Callback = function(state)
-        _G.Noclip = state
-    end
-})
-
-LocalPlayer_Tab:Toggle({
-    Title = "Infinite Jump",
-    Default = false,
-    Callback = function(state)
-        _G.InfiniteJump = state
-    end
-})
 
 --========================================================
 -- TEAM CHECK HELPER
@@ -288,29 +248,29 @@ RunService.RenderStepped:Connect(function()
         local height = math.abs(headPos.Y-hrpPos.Y)*2
         local width = height/2
 
-        -- LINE
-        data.Line.Visible = _G.ESP_LINE and visible
+        -- LINE (DUVAR ARKASI DA GÖRÜNÜR)
+        data.Line.Visible = _G.ESP_LINE
         if _G.ESP_LINE then
             data.Line.From = Vector2.new(Camera.ViewportSize.X/2,0)
             data.Line.To = Vector2.new(hrpPos.X,hrpPos.Y)
         end
 
-        -- BOX
-        data.Box.Visible = _G.ESP_BOX and visible
+        -- BOX (DUVAR ARKASI DA GÖRÜNÜR)
+        data.Box.Visible = _G.ESP_BOX
         if _G.ESP_BOX then
             data.Box.Size = Vector2.new(width,height)
             data.Box.Position = Vector2.new(hrpPos.X-width/2,hrpPos.Y-height/2)
         end
 
-        -- NAME
-        data.Name.Visible = _G.ESP_NAME and visible
+        -- NAME (DUVAR ARKASI DA GÖRÜNÜR)
+        data.Name.Visible = _G.ESP_NAME
         if _G.ESP_NAME then
             data.Name.Text = plr.Name
             data.Name.Position = Vector2.new(hrpPos.X,hrpPos.Y-height/2-14)
         end
 
-        -- HEALTH
-        data.HealthBar.Visible = _G.ESP_HEALTH and visible
+        -- HEALTH (DUVAR ARKASI DA GÖRÜNÜR)
+        data.HealthBar.Visible = _G.ESP_HEALTH
         if _G.ESP_HEALTH then
             local hp = hum.Health/hum.MaxHealth
             data.HealthBar.Color = getHealthColor(hp)
@@ -318,46 +278,14 @@ RunService.RenderStepped:Connect(function()
             data.HealthBar.To = Vector2.new(hrpPos.X-width/2-6, hrpPos.Y+height/2-height*hp)
         end
 
-        -- HIGHLIGHT
+        -- HIGHLIGHT (DUVAR ARKASI RENGİ KIRMIZI)
         if data.Highlight then
             if _G.ESP_HIGHLIGHT then
                 data.Highlight.FillColor = visible and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
-                data.Highlight.Enabled = visible
+                data.Highlight.Enabled = true
             else
                 data.Highlight.Enabled = false
             end
         end
-    end
-end)
--- Local Player
-RunService.Stepped:Connect(function()
-    local char = LocalPlayer.Character
-    if char then
-        if _G.Noclip then
-            for _, part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = false
-                end
-            end
-        end
-    end
-end)
-
-UIS.JumpRequest:Connect(function()
-    if _G.InfiniteJump then
-        local char = LocalPlayer.Character
-        if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            end
-        end
-    end
-end)
--- (WalkSpeed kalıcı)
-LocalPlayer.CharacterAdded:Connect(function(char)
-    local hum = char:WaitForChild("Humanoid", 5)
-    if hum then
-        hum.WalkSpeed = _G.WalkSpeed
     end
 end)

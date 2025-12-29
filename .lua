@@ -9,7 +9,7 @@ if not ok or not WindUI then
 end
 WindUI:Notify({
     Title = "Loaded",
-    Content = "Counter Blox - ESP + Movement (Mobile Uyumlu)",
+    Content = "Counter Bloxment (Anti-Cheat Bypass)",
     Duration = 3,
     Icon = "check"
 })
@@ -50,7 +50,7 @@ _G.SILENT_AIM = false
 _G.AIM_FOV = 150
 _G.AIM_VISIBLE = true
 
--- Movement Globals
+-- Movement Globals (Anti-Cheat Bypass)
 _G.WalkSpeedEnabled = false
 _G.WalkSpeedValue = 30
 _G.NoclipEnabled = false
@@ -82,8 +82,8 @@ Aim_Tab:Slider({
 })
 Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
 
--- Movement Toggle'lar (Counter Blox'a Özel Çalışan Yöntem)
-Movement_Tab:Toggle({Title="Walkspeed", Default=false, Callback=function(v) _G.WalkSpeedEnabled = v end})
+-- Movement Toggle'lar (Anti-Cheat Bypass)
+Movement_Tab:Toggle({Title="Walkspeed (Bypass)", Default=false, Callback=function(v) _G.WalkSpeedEnabled = v end})
 Movement_Tab:Slider({
     Title="Walkspeed Value",
     Step=1,
@@ -184,19 +184,27 @@ local function getTarget()
     return best
 end
 
--- Counter Blox'a Özel Movement (Mobile Uyumlu & Anti-Reset)
-local function setWalkSpeed()
-    if not _G.WalkSpeedEnabled then return end
-    local char = LocalPlayer.Character
-    if char then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = _G.WalkSpeedValue
-        end
+-- Anti-Cheat Bypass Movement (Counter Blox'ta Çalışır)
+local WalkSpeedConnection
+local function toggleWalkSpeed()
+    if WalkSpeedConnection then WalkSpeedConnection:Disconnect() end
+    if _G.WalkSpeedEnabled then
+        local speed = (_G.WalkSpeedValue - 16) * 0.7  -- Normal hissettir (16 = 0, 100 = yüksek)
+        WalkSpeedConnection = RunService.Stepped:Connect(function(_, dt)
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                local hrp = char.HumanoidRootPart
+                local move = LocalPlayer:GetMouse().Hit.LookVector * speed * dt * 50
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then hrp.CFrame = hrp.CFrame + move end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then hrp.CFrame = hrp.CFrame - move end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then hrp.CFrame = hrp.CFrame - hrp.CFrame.RightVector * speed * dt * 50 end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then hrp.CFrame = hrp.CFrame + hrp.CFrame.RightVector * speed * dt * 50 end
+            end
+        end)
     end
 end
 
--- Noclip (Counter Blox'ta Çalışır)
+-- Noclip
 RunService.Stepped:Connect(function()
     if _G.NoclipEnabled then
         local char = LocalPlayer.Character
@@ -210,27 +218,21 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- Infinite Jump (Mobile Uyumlu - JumpRequest + Touch)
+-- Infinite Jump (Velocity ile - Bug Yok, Mobile Uyumlu)
 UserInputService.JumpRequest:Connect(function()
     if _G.InfJumpEnabled then
         local char = LocalPlayer.Character
         if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
             end
         end
     end
 end)
 
--- Anti-Reset Walkspeed (Heartbeat Loop)
-RunService.Heartbeat:Connect(setWalkSpeed)
-
--- Character Respawn'da Yeniden Uygula
-LocalPlayer.CharacterAdded:Connect(function()
-    task.wait(1)
-    setWalkSpeed()
-end)
+-- Toggle Bağlantıları
+Movement_Tab:FindFirstChild("Walkspeed").Callback = toggleWalkSpeed  -- Toggle değişince çalıştır
 
 RunService.RenderStepped:Connect(function()
     -- AIM FOV

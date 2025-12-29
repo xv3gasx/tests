@@ -195,7 +195,7 @@ local function getTarget()
 end
 
 --========================================================
--- RENDER LOOP (ESP + AIM + EKRAN DIŞI KONTROL)
+-- RENDER LOOP (ESP + AIM + ARKA/ÖN KONTROL)
 --========================================================
 RunService.RenderStepped:Connect(function()
     FOV.Visible = _G.SILENT_AIM
@@ -223,20 +223,25 @@ RunService.RenderStepped:Connect(function()
         local headPos = Camera:WorldToViewportPoint(head.Position)
         local visible = isVisible(head,c)
 
-        -- Ekran dışındaysa gizle, ekrana gelince tekrar aç
-        local espVisible = onScreen
+        -- Kamera bakışı ve ekran kontrolü
+        local lookVector = (hrp.Position - Camera.CFrame.Position).Unit
+        local forwardDot = lookVector:Dot(Camera.CFrame.LookVector)
+        local espVisible = onScreen and forwardDot > 0  -- Arka tarafta ise gizle
+
+        -- Tüm ESP’yi gizle/aktif et
         for _,v in pairs(d) do
             if typeof(v)~="Instance" then
                 v.Visible = espVisible
             end
         end
 
+        -- Highlight
         if d.Highlight then
             if _G.ESP_HIGHLIGHT then
-                d.Highlight.FillColor = visible and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
+                d.Highlight.FillColor = espVisible and (visible and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)) or Color3.fromRGB(0,0,0)
                 d.Highlight.Enabled = espVisible
             else
-                d.Highlight.Enabled = false
+                d.Highlight.Enabled=false
             end
         end
 

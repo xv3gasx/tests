@@ -4,6 +4,7 @@ local ok, WindUI = pcall(function()
         "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
     ))()
 end)
+
 if not ok or not WindUI then
     warn("WindUI load failed")
     return
@@ -11,49 +12,48 @@ end
 
 WindUI:Notify({
     Title = "Auto Shoot Loaded",
-    Content = "Only Auto Shoot Enabled",
+    Content = "Stable Auto Shoot (No Camera / No Mouse Bug)",
     Duration = 3,
     Icon = "check"
 })
 
 -- WINDOW
 local Window = WindUI:CreateWindow({
-    Title = "Blox Strike",
+    Title = "Auto Shoot",
     Author = "by x.v3gas.x",
     Theme = "Dark",
-    Size = UDim2.fromOffset(420, 300),
-    Folder = "BloxStrike",
+    Size = UDim2.fromOffset(420, 260),
+    Folder = "AutoShoot",
     AutoScale = true
 })
 
 Window:EditOpenButton({
-    Title = "Open Menu",
-    Icon = "monitor",
+    Title = "Open Auto Shoot",
+    Icon = "crosshair",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
     Draggable = true
 })
 
--- AUTO TAB
+-- TAB
 local Auto_Tab = Window:Tab({
-    Title = "Auto",
-    Icon = "zap"
+    Title = "Auto Shoot",
+    Icon = "target"
 })
 
 -- SERVICES
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local VirtualInput = game:GetService("VirtualInputManager")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- SETTINGS
+-- GLOBALS
 _G.AUTO_SHOOT = false
-_G.SHOT_DELAY = 0.08
+_G.SHOT_DELAY = 0.15
 
 -- UI CONTROLS
 Auto_Tab:Toggle({
-    Title = "Auto Shoot",
+    Title = "Enable Auto Shoot",
     Default = false,
     Callback = function(v)
         _G.AUTO_SHOOT = v
@@ -61,49 +61,42 @@ Auto_Tab:Toggle({
 })
 
 Auto_Tab:Slider({
-    Title = "Fire Rate",
+    Title = "Shot Delay",
     Step = 0.01,
-    Value = {Min = 0.03, Max = 0.3, Default = 0.08},
+    Value = {Min = 0.05, Max = 0.5, Default = 0.15},
     Callback = function(v)
         _G.SHOT_DELAY = v
     end
 })
 
--- SIMPLE TARGET CHECK (Ekran ortasında düşman varsa)
-local function hasTarget()
-    local mousePos = Vector2.new(
-        Camera.ViewportSize.X / 2,
-        Camera.ViewportSize.Y / 2
-    )
+-- FUNCTIONS
+local function getGun()
+    local char = LocalPlayer.Character
+    if not char then return nil end
 
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer then
-            local char = plr.Character
-            local head = char and char:FindFirstChild("Head")
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if head and hum and hum.Health > 0 then
-                local pos, onScreen = Camera:WorldToViewportPoint(head.Position)
-                if onScreen then
-                    local dist = (Vector2.new(pos.X, pos.Y) - mousePos).Magnitude
-                    if dist < 35 then
-                        return true
-                    end
-                end
-            end
+    for _,v in pairs(char:GetChildren()) do
+        if v:IsA("Tool") and v:FindFirstChild("Handle") then
+            return v
         end
     end
-    return false
 end
 
--- AUTO SHOOT LOOP
+local function hasTarget()
+    local mouse = LocalPlayer:GetMouse()
+    return mouse and mouse.Target ~= nil
+end
+
+-- AUTO SHOOT LOOP (STABLE)
 local lastShot = 0
-RunService.RenderStepped:Connect(function()
+
+RunService.Heartbeat:Connect(function()
     if not _G.AUTO_SHOOT then return end
     if tick() - lastShot < _G.SHOT_DELAY then return end
     if not hasTarget() then return end
 
-    lastShot = tick()
-
-    VirtualInput:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-    VirtualInput:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+    local tool = getGun()
+    if tool and tool.Activate then
+        lastShot = tick()
+        tool:Activate()
+    end
 end)

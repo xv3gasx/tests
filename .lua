@@ -18,7 +18,7 @@ if not ok or not WindUI then
 end
 WindUI:Notify({
     Title = "discord.gg/kxYEUeARvA",
-    Content = "Join our Discord for more Updates/Scripts",
+    Content = "Click G for open menu",
     Duration = 3,
     Icon = "check"
 })
@@ -41,6 +41,7 @@ Window:EditOpenButton({
 
 local ESP_Tab = Window:Tab({Title="ESP", Icon="eye"})
 local Aim_Tab = Window:Tab({Title="Aim", Icon="target"})
+local Keybind_Tab = Window:Tab({ Title = "Keybind", Icon = "keyboard" })
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -79,6 +80,15 @@ Aim_Tab:Slider({
     Callback=function(v) _G.AIM_FOV=v end
 })
 Aim_Tab:Toggle({Title="Visibility Check", Default=true, Callback=function(v) _G.AIM_VISIBLE=v end})
+
+Keybind_Tab:Keybind({
+    Title = "Toggle UI",
+    Desc = "Keybind to open ui",
+    Value = "G",
+    Callback = function(v)
+        Window:SetToggleKey(Enum.KeyCode[v])
+    end
+})
 
 local function isEnemy(plr)
     if not _G.TEAM_CHECK then return true end

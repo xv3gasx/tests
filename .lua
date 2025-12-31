@@ -1,117 +1,63 @@
--- SERVICES
+-- AUTO SHOOT (INPUT BASED) - Counter Blox uyumlu
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UIS = game:GetService("UserInputService")
+local VIM = game:GetService("VirtualInputManager")
 local Camera = workspace.CurrentCamera
 
 local LP = Players.LocalPlayer
-local Mouse = LP:GetMouse()
 
--- REMOTES
-local Events = ReplicatedStorage:WaitForChild("Events")
+-- AYARLAR
+local ENABLED = true
+local TEAM_CHECK = true
+local FIRE_DELAY = 0.08 -- fire rate (küçük = hızlı)
 
-local HitPart          = Events:FindFirstChild("HitPart")
-local ReplicateShot    = Events:FindFirstChild("ReplicateShot")
-local ReplicateAnim    = Events:FindFirstChild("ReplicateAnimation")
-local ControlTurn      = Events:FindFirstChild("ControlTurn")
-local Trail            = Events:FindFirstChild("Trail")
-local RemoteEvent      = Events:FindFirstChild("RemoteEvent")
+local lastFire = 0
 
--- SETTINGS
-local AUTO_SHOOT = true
-local FIRE_DELAY = 0.08 -- mermi hızı
-
--- UTILS
-local function getGun()
-    return LP.Character and LP.Character:FindFirstChildWhichIsA("Tool")
+local function isEnemy(plr)
+    if not TEAM_CHECK then return true end
+    if not LP.Team or not plr.Team then return true end
+    return plr.Team ~= LP.Team
 end
 
-local function getTarget()
-    local best, dist = nil, math.huge
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr ~= LP and plr.Character then
-            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
-            local head = plr.Character:FindFirstChild("Head")
-            if hum and hum.Health > 0 and head then
-                local pos, on = Camera:WorldToViewportPoint(head.Position)
-                if on then
-                    local d = (Vector2.new(pos.X,pos.Y) -
-                              Vector2.new(Mouse.X,Mouse.Y)).Magnitude
-                    if d < dist then
-                        dist = d
-                        best = head
-                    end
-                end
-            end
-        end
-    end
-    return best
-end
-
--- CORE SHOOT FUNCTION
-local function fireShot()
-    local gun = getGun()
-    local target = getTarget()
-    if not gun or not target then return end
-
+local function getTargetFromCrosshair()
     local origin = Camera.CFrame.Position
-    local hitPos = target.Position
+    local direction = Camera.CFrame.LookVector * 1000
 
-    -- Kamera bozulur (bilerek)
-    Camera.CFrame = CFrame.new(origin, hitPos)
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Blacklist
+    params.FilterDescendantsInstances = {LP.Character}
 
-    -- 1) Animasyon
-    if ReplicateAnim then
-        ReplicateAnim:FireServer("Fire")
+    local result = workspace:Raycast(origin, direction, params)
+    if not result then return nil end
+
+    local part = result.Instance
+    local model = part:FindFirstAncestorOfClass("Model")
+    if not model then return nil end
+
+    local hum = model:FindFirstChildOfClass("Humanoid")
+    local plr = Players:GetPlayerFromCharacter(model)
+
+    if hum and hum.Health > 0 and plr and plr ~= LP and isEnemy(plr) then
+        return true
     end
 
-    -- 2) Mermi replikasyonu
-    if ReplicateShot then
-        ReplicateShot:FireServer()
-    end
-
-    -- 3) Hit bildirimi
-    if HitPart then
-        HitPart:FireServer(
-            target,
-            hitPos,
-            gun.Name,
-            4096,
-            gun,
-            1,false,false,
-            hitPos,
-            52,
-            Vector3.new(0,1,0),
-            false,false,false,true
-        )
-    end
-
-    -- 4) Trail
-    if Trail then
-        Trail:FireServer(
-            CFrame.new(origin, hitPos),
-            hitPos,
-            {workspace.Map}
-        )
-    end
-
-    -- 5) Efekt
-    if RemoteEvent and gun:FindFirstChild("Flash") then
-        RemoteEvent:FireServer({
-            "createparticle",
-            "muzzle",
-            gun.Flash
-        })
-    end
+    return nil
 end
 
--- LOOP
-task.spawn(function()
-    while task.wait(FIRE_DELAY) do
-        if AUTO_SHOOT then
-            fireShot()
-        end
+RunService.RenderStepped:Connect(function()
+    if not ENABLED then return end
+    if tick() - lastFire < FIRE_DELAY then return end
+
+    if getTargetFromCrosshair() then
+        lastFire = tick()
+
+        -- Mouse1 DOWN
+        VIM:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+        task.wait()
+        -- Mouse1 UP
+        VIM:SendMouseButtonEvent(0, 0, 0, false, game, 0)
     end
 end)
-
-print("[AutoShoot] Dynamic shooter started")
+print("a")

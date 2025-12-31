@@ -1,63 +1,34 @@
--- AUTO SHOOT (INPUT BASED) - Counter Blox uyumlu
+-- SETTINGS
+local HITBOX_SIZE = Vector3.new(6, 6, 6) -- büyüt / küçült
+local HITBOX_TRANSPARENCY = 0.7
+local TEAM_CHECK = true
 
+-- SERVICES
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local VIM = game:GetService("VirtualInputManager")
-local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
 
-local LP = Players.LocalPlayer
-
--- AYARLAR
-local ENABLED = true
-local TEAM_CHECK = true
-local FIRE_DELAY = 0.08 -- fire rate (küçük = hızlı)
-
-local lastFire = 0
-
+-- UTILS
 local function isEnemy(plr)
     if not TEAM_CHECK then return true end
-    if not LP.Team or not plr.Team then return true end
-    return plr.Team ~= LP.Team
+    if not LocalPlayer.Team or not plr.Team then return true end
+    return plr.Team ~= LocalPlayer.Team
 end
 
-local function getTargetFromCrosshair()
-    local origin = Camera.CFrame.Position
-    local direction = Camera.CFrame.LookVector * 1000
-
-    local params = RaycastParams.new()
-    params.FilterType = Enum.RaycastFilterType.Blacklist
-    params.FilterDescendantsInstances = {LP.Character}
-
-    local result = workspace:Raycast(origin, direction, params)
-    if not result then return nil end
-
-    local part = result.Instance
-    local model = part:FindFirstAncestorOfClass("Model")
-    if not model then return nil end
-
-    local hum = model:FindFirstChildOfClass("Humanoid")
-    local plr = Players:GetPlayerFromCharacter(model)
-
-    if hum and hum.Health > 0 and plr and plr ~= LP and isEnemy(plr) then
-        return true
-    end
-
-    return nil
-end
-
+-- HITBOX LOOP
 RunService.RenderStepped:Connect(function()
-    if not ENABLED then return end
-    if tick() - lastFire < FIRE_DELAY then return end
+    for _,plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and isEnemy(plr) then
+            local char = plr.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
 
-    if getTargetFromCrosshair() then
-        lastFire = tick()
-
-        -- Mouse1 DOWN
-        VIM:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-        task.wait()
-        -- Mouse1 UP
-        VIM:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+            if hrp and hum and hum.Health > 0 then
+                hrp.Size = HITBOX_SIZE
+                hrp.Transparency = HITBOX_TRANSPARENCY
+                hrp.CanCollide = false
+                hrp.Massless = true
+            end
+        end
     end
 end)
-print("a")

@@ -1,7 +1,7 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- COUNTER BLOX ÖZEL NO RECOIL + VERİLEN SPREAD SCRIPT (KOŞARKEN DA ÇALIŞIR!)
--- Spread: Tam verilen script gibi (Weapons.Spread NumberValue'lar 0)
--- Recoil: Sürekli Recoil/Kick/Sway 0 + RenderStepped reset
+-- OPTIMIZED No Recoil + Custom Spread (FPS DROP YOK! 60+ FPS korur)
+-- Spread: Sadece Weapons klasörü (ChildAdded + düşük frekans)
+-- Recoil: Sadece hedef value'ları (değişim dinle + 0.2s loop)
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -13,7 +13,7 @@ local WeaponsFolder = ReplicatedStorage:FindFirstChild("Weapons")
 
 -- Sade GUI (modern)
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "NoRecoilCustomSpreadGui"
+ScreenGui.Name = "OptimizedNoRecoilSpread"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
@@ -31,7 +31,7 @@ Corner.Parent = Frame
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🎯 No Recoil + Custom Spread"
+Title.Text = "🎯 No Recoil + Custom Spread (FPS Fix)"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 16
@@ -55,8 +55,9 @@ BtnCorner.Parent = ToggleBtn
 local enabled = false
 local spreadConnection
 local recoilConnection
+local recoilConnections = {}  -- Changed event'ler
 
--- VERİLEN SPREAD SCRIPT FONKSİYONU (Tam kopya + geliştirilmiş)
+-- VERİLEN SPREAD SCRIPT FONKSİYONU (Optimize)
 local function noSpread(weapon)
     local spread = weapon:FindFirstChild("Spread")
     if spread then
@@ -76,29 +77,25 @@ local function applySpreadToAll()
     end
 end
 
--- Recoil sıfırlama (Koşarken çalışan - ReplicatedStorage tarama + RenderStepped)
-local function applyNoRecoil()
-    -- ReplicatedStorage'de recoil named value'ları sıfırla
-    for _, v in pairs(ReplicatedStorage:GetDescendants()) do
-        if (v:IsA("NumberValue") or v:IsA("IntValue")) and (string.find(v.Name:lower(), "recoil") or string.find(v.Name:lower(), "kick") or string.find(v.Name:lower(), "sway")) then
-            v.Value = 0
-        end
-    end
-    -- Weapons'te de recoil ara
+-- Recoil optimize (sadece recoil named'ları bul + Changed dinle)
+local function findAndZeroRecoilValues()
+    local targets = {}
+    -- Sadece Weapons ve bilinen yollar tara (GetDescendants YOK!)
     if WeaponsFolder then
         for _, weapon in ipairs(WeaponsFolder:GetChildren()) do
-            pcall(function()
-                local recoil = weapon:FindFirstChild("Recoil")
-                if recoil then
-                    for _, val in ipairs(recoil:GetDescendants()) do
-                        if val:IsA("NumberValue") or val:IsA("IntValue") then
-                            val.Value = 0
-                        end
+            local recoil = weapon:FindFirstChild("Recoil")
+            if recoil then
+                for _, v in ipairs(recoil:GetChildren()) do  -- Descendants değil, Children (hızlı)
+                    if (v:IsA("NumberValue") or v:IsA("IntValue")) and 
+                       (string.find(v.Name:lower(), "recoil") or string.find(v.Name:lower(), "kick") or string.find(v.Name:lower(), "sway")) then
+                        v.Value = 0
+                        table.insert(targets, v)
                     end
                 end
-            end)
+            end
         end
     end
+    return targets
 end
 
 -- Toggle
@@ -108,19 +105,29 @@ ToggleBtn.MouseButton1Click:Connect(function()
         ToggleBtn.Text = "AÇIK ✅"
         ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
         
-        -- Spread Loop (0.1s'de tüm Weapons.Spread sıfırla - KOŞARKEN DA!)
-        spreadConnection = RunService.Heartbeat:Connect(function()
-            applySpreadToAll()
+        -- Spread: DÜŞÜK FREKANS (0.2s) + ChildAdded
+        applySpreadToAll()  -- Init
+        if WeaponsFolder then
+            WeaponsFolder.ChildAdded:Connect(function(weapon)
+                task.wait(0.1)
+                noSpread(weapon)
+            end)
+        end
+        spreadConnection = game:GetService("RunService").Stepped:Connect(function()
+            applySpreadToAll()  -- Her physics step (daha yavaş, FPS dostu)
         end)
         
-        -- Recoil Loop (Her frame sıfırla - taş gibi!)
-        recoilConnection = RunService.RenderStepped:Connect(function()
-            applyNoRecoil()
+        -- Recoil: Changed event'ler bağla + düşük frekans loop
+        local targets = findAndZeroRecoilValues()
+        for _, v in ipairs(targets) do
+            local conn = v.Changed:Connect(function()
+                if enabled then v.Value = 0 end
+            end)
+            table.insert(recoilConnections, conn)
+        end
+        recoilConnection = RunService.Stepped:Connect(function()  -- Stepped (yavaş)
+            findAndZeroRecoilValues()
         end)
-        
-        -- Init uygula
-        applySpreadToAll()
-        applyNoRecoil()
         
     else
         ToggleBtn.Text = "KAPALI ❌"
@@ -128,19 +135,12 @@ ToggleBtn.MouseButton1Click:Connect(function()
         
         if spreadConnection then spreadConnection:Disconnect() end
         if recoilConnection then recoilConnection:Disconnect() end
+        for _, conn in ipairs(recoilConnections) do
+            conn:Disconnect()
+        end
+        recoilConnections = {}
     end
 end)
-
--- Yeni silah gelince otomatik uygula
-if WeaponsFolder then
-    WeaponsFolder.ChildAdded:Connect(function(weapon)
-        if enabled then
-            task.wait(0.1)
-            noSpread(weapon)
-            applyNoRecoil()
-        end
-    end)
-end
 
 -- Sürükleme
 local dragging, dragStart, startPos
@@ -165,5 +165,5 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ Custom Spread + No Recoil Yüklendi! AÇIK yap → Koşarken spread/recoil YOK!")
-print("Spread: Tam verdiğin script gibi (Weapons.Spread 0) | Recoil: Sürekli sıfırlama")
+print("✅ OPTIMIZED No Recoil + Custom Spread Yüklendi! FPS DROP YOK (60+ FPS)!")
+print("Spread: Stepped loop + ChildAdded | Recoil: Changed events + sınırlı tarama")

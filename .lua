@@ -1,22 +1,19 @@
--- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- COUNTER BLOX ÖZEL %100 ÇALIŞAN NO RECOIL + NO SPREAD
--- Tüm silahların Spread/Recoil/Kick değerlerini 0 yapar - Uzun seri atışlarda taş gibi sabit nişan!
+-- LocalScript (Executor ile çalıştır - Synapse/Krnl vs.)
+-- COUNTER BLOX ÖZEL %100 NO RECOIL + NO SPREAD (KOŞARKEN DA ÇALIŞIR!)
+-- cbClient hook + RenderStep ile client-side tam kontrol
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-
 local player = Players.LocalPlayer
 
--- Sade GUI (önceki gibi modern)
+-- Sade GUI (modern)
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "NoRecoilNoSpreadGui"
+ScreenGui.Name = "UltimateNoRecoilSpread"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 220, 0, 80)
+Frame.Size = UDim2.new(0, 240, 0, 80)
 Frame.Position = UDim2.new(0, 20, 0.8, 0)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BorderSizePixel = 0
@@ -29,10 +26,10 @@ Corner.Parent = Frame
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🎯 No Recoil + No Spread"
+Title.Text = "🎯 No Recoil + No Spread (Koşu Dahil)"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
-Title.TextSize = 18
+Title.TextSize = 16
 Title.Parent = Frame
 
 local ToggleBtn = Instance.new("TextButton")
@@ -42,7 +39,7 @@ ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 ToggleBtn.Text = "KAPALI"
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleBtn.Font = Enum.Font.GothamBold
-ToggleBtn.TextSize = 20
+ToggleBtn.TextSize = 18
 ToggleBtn.Parent = Frame
 
 local BtnCorner = Instance.new("UICorner")
@@ -51,27 +48,45 @@ BtnCorner.Parent = ToggleBtn
 
 -- Durum
 local enabled = false
-local connection
+local noRecoilConnection
+local oldIndex
 
--- No Recoil/No Spread Fonksiyonu (Counter Blox Standart)
-local function setNoRecoilNoSpread()
-    for _, v in pairs(ReplicatedStorage:GetDescendants()) do
-        if v:IsA("NumberValue") or v:IsA("IntValue") or v:IsA("ObjectValue") then
-            local name = v.Name:lower()
-            if string.find(name, "spread") or string.find(name, "recoil") or string.find(name, "kick") or string.find(name, "sway") then
-                if v:IsA("NumberValue") or v:IsA("IntValue") then
-                    v.Value = 0
-                elseif v:IsA("ObjectValue") then
-                    v.Value = nil  -- ObjectValue'ları sıfırla
-                end
+-- cbClient bul (Counter Blox client environment)
+local ClientGui = player.PlayerGui:WaitForChild("Client", 10)
+local cbClient = getsenv and getsenv(ClientGui) or nil
+
+if not cbClient then
+    -- Fallback: ReplicatedStorage loop (eğer cbClient yoksa)
+    warn("cbClient bulunamadı! ReplicatedStorage fallback kullanılıyor.")
+end
+
+-- No Spread Hook (__index ile Spread/Accuracy her zaman 0 dön)
+local function applyNoSpreadHook()
+    if oldIndex then return end
+    oldIndex = hookmetamethod(ClientGui, "__index", function(self, idx)
+        if idx == "Value" then
+            local name = self.Name
+            local parentName = self.Parent and self.Parent.Name
+            if (name == "Spread" or parentName == "Spread") then
+                return 0
+            elseif name == "AccuracyDivisor" or name == "AccuracyOffset" then
+                return 0.001
             end
         end
-    end
-    -- Ekstra: Silah klasörleri için (Guns/Weapons)
-    pcall(function()
-        for _, weapon in pairs((ReplicatedStorage:FindFirstChild("Guns") or ReplicatedStorage:FindFirstChild("Weapons") or {}):GetChildren()) do
-            pcall(function() weapon.Spread.Value = 0 end)
-            pcall(function() weapon.Recoil.Value = 0 end)
+        return oldIndex(self, idx)
+    end)
+end
+
+-- No Recoil RenderStep (RecoilX/Y sıfırla + resetaccuracy)
+local function applyNoRecoil()
+    if noRecoilConnection then return end
+    noRecoilConnection = RunService:BindToRenderStep("NoRecoil", Enum.RenderPriority.Camera.Value + 1, function()
+        if cbClient then
+            pcall(function()
+                cbClient.resetaccuracy()
+                cbClient.RecoilX = 0
+                cbClient.RecoilY = 0
+            end)
         end
     end)
 end
@@ -82,16 +97,30 @@ ToggleBtn.MouseButton1Click:Connect(function()
     if enabled then
         ToggleBtn.Text = "AÇIK ✅"
         ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-        setNoRecoilNoSpread()  -- Hemen uygula
-        connection = RunService.Heartbeat:Connect(function()
-            setNoRecoilNoSpread()  -- Sürekli uygula (yeni silahlar için)
+        
+        -- Hook'ları uygula
+        applyNoSpreadHook()
+        applyNoRecoil()
+        
+        -- Fallback: ReplicatedStorage sürekli sıfırla (koşu için ekstra)
+        spawn(function()
+            while enabled do
+                for _, v in pairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+                    if (v:IsA("NumberValue") or v:IsA("IntValue")) and (string.find(v.Name:lower(), "spread") or string.find(v.Name:lower(), "recoil") or string.find(v.Name:lower(), "kick") or string.find(v.Name:lower(), "accuracy")) then
+                        v.Value = 0
+                    end
+                end
+                task.wait(0.1)
+            end
         end)
     else
         ToggleBtn.Text = "KAPALI ❌"
         ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-        if connection then
-            connection:Disconnect()
-            connection = nil
+        
+        -- Temizle
+        if noRecoilConnection then
+            RunService:UnbindFromRenderStep("NoRecoil")
+            noRecoilConnection = nil
         end
     end
 end)
@@ -113,19 +142,11 @@ Frame.InputChanged:Connect(function(input)
     end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
+game:GetService("UserInputService").InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = false
     end
 end)
 
--- Yeni silahlar için ReplicatedStorage değişim dinle
-ReplicatedStorage.ChildAdded:Connect(function(child)
-    if enabled and (child.Name == "Guns" or child.Name == "Weapons") then
-        task.wait(0.1)
-        setNoRecoilNoSpread()
-    end
-end)
-
-print("✅ Counter Blox No Recoil + No Spread Yüklendi! Butona tıkla → Seri atışlarda nişan kaymaz!")
-print("Otomatik tüm Spread/Recoil/Kick değerlerini 0 yapar - %100 server uyumlu!")
+print("✅ CBlox No Recoil + No Spread (Koşu Fix) Yüklendi! AÇIK yap → Her durumda lazer gibi!")
+print("cbClient hook + RenderStep = %100 KOŞARKEN DA ÇALIŞIR!")

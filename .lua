@@ -1,116 +1,117 @@
--- Auto Shoot Script for Counter Blox-like games
--- Only requires a toggle button, no external UI library
-
+-- SERVICES
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Camera = workspace.CurrentCamera
 
--- Auto shoot toggle
-local AutoShootEnabled = false
+local LP = Players.LocalPlayer
+local Mouse = LP:GetMouse()
 
--- GUI
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.CoreGui
+-- REMOTES
+local Events = ReplicatedStorage:WaitForChild("Events")
 
-local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 150, 0, 50)
-Frame.Position = UDim2.new(0, 20, 0, 20)
-Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Frame.BorderSizePixel = 0
-Frame.Parent = ScreenGui
+local HitPart          = Events:FindFirstChild("HitPart")
+local ReplicateShot    = Events:FindFirstChild("ReplicateShot")
+local ReplicateAnim    = Events:FindFirstChild("ReplicateAnimation")
+local ControlTurn      = Events:FindFirstChild("ControlTurn")
+local Trail            = Events:FindFirstChild("Trail")
+local RemoteEvent      = Events:FindFirstChild("RemoteEvent")
 
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(1,0,1,0)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
-ToggleButton.TextColor3 = Color3.fromRGB(255,255,255)
-ToggleButton.Font = Enum.Font.SourceSansBold
-ToggleButton.TextSize = 18
-ToggleButton.Text = "Auto Shoot: OFF"
-ToggleButton.Parent = Frame
+-- SETTINGS
+local AUTO_SHOOT = true
+local FIRE_DELAY = 0.08 -- mermi hızı
 
-ToggleButton.MouseButton1Click:Connect(function()
-    AutoShootEnabled = not AutoShootEnabled
-    ToggleButton.Text = "Auto Shoot: "..(AutoShootEnabled and "ON" or "OFF")
-end)
+-- UTILS
+local function getGun()
+    return LP.Character and LP.Character:FindFirstChildWhichIsA("Tool")
+end
 
--- Remotes
-local HitPart = ReplicatedStorage.Events:WaitForChild("HitPart")
-local ControlTurn = ReplicatedStorage.Events:WaitForChild("ControlTurn")
-local Trail = ReplicatedStorage.Events:WaitForChild("Trail")
-local ReplicateAnimation = ReplicatedStorage.Events:WaitForChild("ReplicateAnimation")
-local RemoteEvent = ReplicatedStorage.Events:WaitForChild("RemoteEvent")
-local ReplicateShot = ReplicatedStorage.Events:WaitForChild("ReplicateShot")
+local function getTarget()
+    local best, dist = nil, math.huge
+    for _,plr in pairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character then
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            local head = plr.Character:FindFirstChild("Head")
+            if hum and hum.Health > 0 and head then
+                local pos, on = Camera:WorldToViewportPoint(head.Position)
+                if on then
+                    local d = (Vector2.new(pos.X,pos.Y) -
+                              Vector2.new(Mouse.X,Mouse.Y)).Magnitude
+                    if d < dist then
+                        dist = d
+                        best = head
+                    end
+                end
+            end
+        end
+    end
+    return best
+end
 
--- Example variables (replace these with the actual instances in your game)
-local Geometry = workspace:WaitForChild("Map"):WaitForChild("Geometry")
-local Part = Geometry:FindFirstChildWhichIsA("Part") or Geometry:FindFirstChild("Part")
-local Gun = LocalPlayer:WaitForChild("Gun") or LocalPlayer.Backpack:FindFirstChildWhichIsA("Tool")
-local Flash = Gun and Gun:FindFirstChild("Flash") or nil
+-- CORE SHOOT FUNCTION
+local function fireShot()
+    local gun = getGun()
+    local target = getTarget()
+    if not gun or not target then return end
 
--- Fire function
-local function Fire()
-    if not AutoShootEnabled then return end
+    local origin = Camera.CFrame.Position
+    local hitPos = target.Position
 
-    -- HitPart
-    if Part then
-        local RemoteArgs = {
-            Part,
-            Vector3.new(-3881900, 8536280, -1237733),
-            "Glock",
-            4096,
-            Gun,
-            [7] = 1,
-            [8] = false,
-            [9] = false,
-            [10] = Vector3.new(-671, 1011, -899),
-            [11] = 52,
-            [12] = Vector3.new(0,1,0),
-            [13] = false,
-            [14] = false,
-            [15] = false,
-            [16] = true
-        }
-        HitPart:FireServer(unpack(RemoteArgs,1,table.maxn(RemoteArgs)))
+    -- Kamera bozulur (bilerek)
+    Camera.CFrame = CFrame.new(origin, hitPos)
+
+    -- 1) Animasyon
+    if ReplicateAnim then
+        ReplicateAnim:FireServer("Fire")
     end
 
-    -- ControlTurn
-    ControlTurn:FireServer(-0.22411058843135834, false)
+    -- 2) Mermi replikasyonu
+    if ReplicateShot then
+        ReplicateShot:FireServer()
+    end
 
-    -- Trail
-    if Geometry then
-        Trail:FireServer(
-            CFrame.new(-666, 1010, -887, 0,0,-1,0,1,0,1,0,0),
-            Vector3.new(-666,1006,-906),
-            {Geometry}
+    -- 3) Hit bildirimi
+    if HitPart then
+        HitPart:FireServer(
+            target,
+            hitPos,
+            gun.Name,
+            4096,
+            gun,
+            1,false,false,
+            hitPos,
+            52,
+            Vector3.new(0,1,0),
+            false,false,false,true
         )
     end
 
-    -- ReplicateAnimation Fire
-    ReplicateAnimation:FireServer("Fire")
-
-    -- ReplicateAnimation StopPlant (optional, can remove if unnecessary)
-    ReplicateAnimation:FireServer("StopPlant")
-
-    -- RemoteEvent muzzle
-    if Flash then
-        RemoteEvent:FireServer({"createparticle","muzzle",Flash})
+    -- 4) Trail
+    if Trail then
+        Trail:FireServer(
+            CFrame.new(origin, hitPos),
+            hitPos,
+            {workspace.Map}
+        )
     end
 
-    -- RemoteEvent bullethole
-    if Part then
-        RemoteEvent:FireServer({"createparticle","bullethole",Part,Vector3.new(-666,1006,-906)})
+    -- 5) Efekt
+    if RemoteEvent and gun:FindFirstChild("Flash") then
+        RemoteEvent:FireServer({
+            "createparticle",
+            "muzzle",
+            gun.Flash
+        })
     end
-
-    -- ReplicateShot
-    ReplicateShot:FireServer()
 end
 
--- RunService loop for auto shoot
-RunService.RenderStepped:Connect(function()
-    if AutoShootEnabled then
-        Fire()
+-- LOOP
+task.spawn(function()
+    while task.wait(FIRE_DELAY) do
+        if AUTO_SHOOT then
+            fireShot()
+        end
     end
 end)
+
+print("[AutoShoot] Dynamic shooter started")

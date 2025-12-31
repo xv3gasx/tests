@@ -19,3 +19,4 @@ if WeaponsFolder then
 		noSpread(weapon)
 	end
 end
+print("a")

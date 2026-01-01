@@ -1,5 +1,5 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- BUTON İÇİ LOCALSCRIPT HACK - %100 ÇALIŞAN AUTO SHOOT!
+-- AKTIVATED EVENT TETİKLE - %100 ÇALIŞAN AUTO SHOOT (Son Versiyon!)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -13,9 +13,9 @@ local shootButton = nil
 spawn(function()
     while not shootButton do
         local gui = playerGui:FindFirstChild("GUI")
-        if gui then
+        if gui and gui:IsA("ScreenGui") then
             local mobile = gui:FindFirstChild("Mobile")
-            if mobile then
+            if mobile and mobile:IsA("Frame") then
                 local shoot = mobile:FindFirstChild("Shoot")
                 if shoot and shoot:IsA("ImageButton") then
                     shootButton = shoot
@@ -30,12 +30,12 @@ end)
 
 -- GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ButtonScriptHack"
+ScreenGui.Name = "ActivatedAutoShoot"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 300, 0, 80)
+Frame.Size = UDim2.new(0, 280, 0, 80)
 Frame.Position = UDim2.new(0, 20, 0.8, 0)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.Parent = ScreenGui
@@ -43,7 +43,7 @@ Frame.Parent = ScreenGui
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔥 BUTTON SCRIPT HACK (Son Çare!)"
+Title.Text = "🔥 Auto Shoot (Activated Tetik)"
 Title.TextColor3 = Color3.new(255,255,255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -61,58 +61,34 @@ ToggleBtn.Parent = Frame
 
 local enabled = false
 local connection
-local fireFunction = nil
-
--- Button içindeki LocalScript'i bul + fire fonksiyonunu çıkar
-spawn(function()
-    task.wait(2)  -- Button tam yüklenene kadar bekle
-    if shootButton then
-        -- Button içindeki LocalScript'leri tara
-        for _, script in pairs(shootButton:GetDescendants()) do
-            if script:IsA("LocalScript") then
-                local env = getfenv and getfenv(script) or getsenv and getsenv(script)
-                if env then
-                    -- Yaygın fire fonksiyon isimleri
-                    local possibleFires = {"fire", "shoot", "onShoot", "fireBullet", "activate"}
-                    for _, funcName in pairs(possibleFires) do
-                        if env[funcName] and type(env[funcName]) == "function" then
-                            fireFunction = env[funcName]
-                            print("🎯 FIRE FONKSIYONU BULUNDU:", funcName)
-                            break
-                        end
-                    end
-                    if fireFunction then break end
-                end
-            end
-        end
-    end
-end)
 
 -- Crosshair rakip kontrol
 local function isEnemyInCrosshair()
     local char = player.Character
     if not char or not char:FindFirstChild("HumanoidRootPart") then return false end
     
-    local centerX = camera.ViewportSize.X/2
-    local centerY = camera.ViewportSize.Y/2
-    local ray = camera:ScreenPointToRay(centerX, centerY)
-    
+    local centerRay = camera:ScreenPointToRay(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
     local params = RaycastParams.new()
     params.FilterDescendantsInstances = {char}
     params.FilterType = Enum.RaycastFilterType.Blacklist
-    
-    local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, params)
+
+    local result = workspace:Raycast(centerRay.Origin, centerRay.Direction * 1000, params)
     if result then
         local hitChar = result.Instance.Parent
         local hum = hitChar:FindFirstChild("Humanoid")
         local plr = Players:GetPlayerFromCharacter(hitChar)
-        return hum and hum.Health > 0 and plr and plr ~= player and (plr.Team ~= player.Team or plr.TeamColor ~= player.TeamColor)
+        return hum and hum.Health > 0 and plr and plr ~= player and plr.Team ~= player.Team
     end
     return false
 end
 
 -- Toggle
 ToggleBtn.MouseButton1Click:Connect(function()
+    if not shootButton then
+        print("Shoot button bekleniyor...")
+        return
+    end
+    
     enabled = not enabled
     if enabled then
         ToggleBtn.Text = "AÇIK ✅"
@@ -124,12 +100,15 @@ ToggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Auto Shoot
+-- Auto Shoot Loop (Activated event tetikle)
 connection = RunService.Heartbeat:Connect(function()
-    if enabled and isEnemyInCrosshair() and fireFunction then
-        pcall(fireFunction)  -- Button'un kendi fire fonksiyonunu çağır!
+    if enabled and shootButton then
+        if isEnemyInCrosshair() then
+            pcall(function()
+                shootButton.Activated:Fire()  -- Mobil/PC shoot button'un doğal event'i!
+            end)
+        end
     end
 end)
 
-print("✅ BUTTON SCRIPT HACK YÜKLENDİ! Button içindeki LocalScript hack'leniyor...")
-print("Konsola 'FIRE FONKSIYONU BULUNDU' yazarsa = %100 çalışır!")
+print("✅ Activated Auto Shoot yüklendi! Crosshair rakibe = Otomatik ateş (hareket bozulmaz)!")

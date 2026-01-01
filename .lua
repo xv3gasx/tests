@@ -18,7 +18,7 @@ end
 
 WindUI:Notify({
     Title = "discord.gg/kxYEUeARvA",
-    Content = "Click G to toggle Menu",
+    Content = "C toggle Menu",
     Duration = 3,
     Icon = "check"
 })
@@ -114,8 +114,21 @@ Aim_Tab:Slider({
     Callback=function(v) _G.AIM_FOV=v end
 })
 
-Main_Tab:Toggle({Title="No Recoil", Callback=function(v) _G.NO_RECOIL=v end})
-Main_Tab:Toggle({Title="No Spread", Callback=function(v) _G.NO_SPREAD=v end})
+Main_Tab:Toggle({
+    Title="No Recoil",
+    Callback=function(v)
+        _G.NO_RECOIL = v
+        applyAllWeapons()
+    end
+})
+
+Main_Tab:Toggle({
+    Title="No Spread",
+    Callback=function(v)
+        _G.NO_SPREAD = v
+        applyAllWeapons()
+    end
+})
 
 Keybind_Tab:Keybind({
     Title="Toggle UI",
@@ -371,10 +384,32 @@ RunService.RenderStepped:Connect(function()
         end
     end
 
-        if _G.NO_SPREAD and WeaponsFolder then
-        for _,w in ipairs(WeaponsFolder:GetChildren()) do applyNoSpread(w) end
+local function applyWeaponOnce(weapon)
+    if _G.NO_SPREAD then
+        applyNoSpread(weapon)
     end
     if _G.NO_RECOIL then
-        applyNoRecoil()
+        local recoil = weapon:FindFirstChild("Recoil")
+        if recoil then
+            for _,v in ipairs(recoil:GetChildren()) do
+                if v:IsA("NumberValue") or v:IsA("IntValue") then
+                    v.Value = 0
+                end
+            end
+        end
     end
-end)
+end
+
+local function applyAllWeapons()
+    if not WeaponsFolder then return end
+    for _,w in ipairs(WeaponsFolder:GetChildren()) do
+        applyWeaponOnce(w)
+    end
+end
+
+if WeaponsFolder then
+    WeaponsFolder.ChildAdded:Connect(function(w)
+        task.wait()
+        applyWeaponOnce(w)
+    end)
+end

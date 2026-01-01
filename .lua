@@ -99,18 +99,19 @@ ESP_Tab:Toggle({Title="NameTag ESP", Callback=function(v) _G.ESP_NAME=v end})
 ESP_Tab:Toggle({Title="Health ESP", Callback=function(v) _G.ESP_HEALTH=v end})
 ESP_Tab:Toggle({Title="Highlight ESP", Callback=function(v) _G.ESP_HIGHLIGHT=v end})
 
+Aim_Tab:Toggle({
+    Title="Visibility Check",
+    Default=true,
+    Callback=function(v) _G.AIM_VISIBLE=v end
+})
 
-Main_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
-Main_Tab:Slider({
+Aim_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
+
+Aim_Tab:Slider({
     Title="Aim FOV",
     Step=5,
     Value={Min=50,Max=500,Default=150},
     Callback=function(v) _G.AIM_FOV=v end
-})
-Main_Tab:Toggle({
-    Title="Visibility Check",
-    Default=true,
-    Callback=function(v) _G.AIM_VISIBLE=v end
 })
 
 Main_Tab:Toggle({Title="No Recoil (Safe)", Callback=function(v) _G.NO_RECOIL=v end})

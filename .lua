@@ -47,9 +47,7 @@ Window:EditOpenButton({
 -- TABS
 -- =====================================================
 local ESP_Tab     = Window:Tab({Title="ESP",    Icon="eye"})
-local Aim_Tab     = Window:Tab({Title="Aim",    Icon="target"})
 local Main_Tab  = Window:Tab({Title="Weapon", Icon="crosshair"})
-local Visual_Tab  = Window:Tab({Title="Visual", Icon="eye"})
 local Keybind_Tab = Window:Tab({Title="Keybind",Icon="keyboard"})
 -- =====================================================
 -- SERVICES
@@ -101,14 +99,14 @@ ESP_Tab:Toggle({Title="Health ESP", Callback=function(v) _G.ESP_HEALTH=v end})
 ESP_Tab:Toggle({Title="Highlight ESP", Callback=function(v) _G.ESP_HIGHLIGHT=v end})
 
 
-Aim_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
-Aim_Tab:Slider({
+Main_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
+Main_Tab:Slider({
     Title="Aim FOV",
     Step=5,
     Value={Min=50,Max=500,Default=150},
     Callback=function(v) _G.AIM_FOV=v end
 })
-Aim_Tab:Toggle({
+Main_Tab:Toggle({
     Title="Visibility Check",
     Default=true,
     Callback=function(v) _G.AIM_VISIBLE=v end
@@ -126,7 +124,7 @@ Keybind_Tab:Keybind({
     end
 })
 
-Visual_Tab:Toggle({
+Main_Tab:Toggle({
     Title = "Remove Smoke(Molotov included too)",
     Callback = function(v)
         _G.REMOVE_SMOKE = v
@@ -165,7 +163,7 @@ Visual_Tab:Toggle({
     end
 })
 
-Visual_Tab:Toggle({
+Main_Tab:Toggle({
     Title = "Anti Flashbang",
     Callback = function(v)
         _G.ANTI_FLASH = v

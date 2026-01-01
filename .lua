@@ -1,5 +1,5 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- DİREKT SÜREKLİ ATEŞ (Crosshair kontrolü YOK - SÜREKLİ SPAM!)
+-- KONTROLLER AZ BOZULUR + İKONLAR KAYBOLMAZ AUTO SHOOT (Hold Style)
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
@@ -30,7 +30,7 @@ end)
 
 -- GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "DirektAutoShoot"
+ScreenGui.Name = "HoldAutoShoot"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
@@ -40,14 +40,10 @@ Frame.Position = UDim2.new(0, 20, 0.8, 0)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.Parent = ScreenGui
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 8)
-UICorner.Parent = Frame
-
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔫 DİREKT AUTO SHOOT"
+Title.Text = "🔥 Hold Auto Shoot (Az Bozar)"
 Title.TextColor3 = Color3.new(255,255,255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -74,26 +70,25 @@ ToggleBtn.MouseButton1Click:Connect(function()
     
     enabled = not enabled
     if enabled then
-        ToggleBtn.Text = "AÇIK ✅ (SÜREKLİ ATEŞ!)"
+        ToggleBtn.Text = "AÇIK (Hold Ateş)"
         ToggleBtn.BackgroundColor3 = Color3.new(50,200,50)
         
-        -- DİREKT SÜREKLİ SPAM ATEŞ (crosshair kontrolü YOK!)
+        -- SADECE DOWN GÖNDER (UP YOK = ikonlar kaybolmaz, kontroller az bozulur)
         connection = RunService.Heartbeat:Connect(function()
             local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
             VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 1)
-            task.wait(0.03)
-            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)
         end)
         
     else
-        ToggleBtn.Text = "KAPALI ❌"
+        ToggleBtn.Text = "KAPALI"
         ToggleBtn.BackgroundColor3 = Color3.new(200,50,50)
         if connection then
             connection:Disconnect()
-            connection = nil
+            -- Kapatırken son UP gönder (stuck kalmasın)
+            local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
+            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)
         end
     end
 end)
 
-print("✅ DİREKT AUTO SHOOT YÜKLENDİ! Toggle AÇIK = SONSUZ SPAM ATEŞ!")
-print("⚠️ Crosshair kontrolü YOK - Sürekli ateş eder!")
+print("✅ Hold Auto Shoot yüklendi! AÇIK = Sürekli hold ateş (ikonlar kalır)!")

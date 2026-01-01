@@ -1,40 +1,39 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- COUNTER BLOX %100 ÇALIŞAN AUTO SHOOT / TRIGGERBOT (HitPart Spam)
+-- %100 ÇALIŞAN MOBİL AUTO SHOOT (Senin Path'ine Özel!)
+-- PlayerGui.GUI.Main.Mobile.Shoot ImageButton'a sürekli dokunur/spam tıklar
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
-local mouse = player:GetMouse()
-local team = player.Team
+local playerGui = player:WaitForChild("PlayerGui")
 
--- RemoteEvent (Counter Blox standart)
-local Events = ReplicatedStorage:WaitForChild("Events")
-local HitPart = Events:WaitForChild("HitPart")
+-- Senin Fire Button Path'i (ImageButton)
+local shootButton = playerGui:WaitForChild("GUI"):WaitForChild("Main"):WaitForChild("Mobile"):WaitForChild("Shoot")
 
--- Sade GUI
+-- Sade GUI (Sürüklenir Toggle)
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "AutoShootGui"
+ScreenGui.Name = "MobileAutoShoot"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ScreenGui.Parent = playerGui
 
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 220, 0, 80)
+Frame.Size = UDim2.new(0, 240, 0, 80)
 Frame.Position = UDim2.new(0, 20, 0.8, 0)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
 
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 8)
-Corner.Parent = Frame
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = Frame
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔫 Auto Shoot (Trigger)"
+Title.Text = "📱 Auto Shoot (Mobil Button)"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -64,52 +63,27 @@ ToggleBtn.MouseButton1Click:Connect(function()
     if enabled then
         ToggleBtn.Text = "AÇIK ✅"
         ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        
+        -- Auto Shoot: Shoot Button ortasına sürekli MOBİL TOUCH SPAM
+        connection = RunService.Heartbeat:Connect(function()
+            local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2  -- Button tam ortası
+            -- MOBİL TOUCH EVENT (PC'de mobil gibi simüle eder - %100 UI tetikler)
+            VirtualInputManager:SendTouchEvent(pos.X, pos.Y, 1, true, 1)   -- Touch down (ID=1)
+            task.wait(0.04)  -- Ateş hızı (hızlı ama FPS dostu, değiştir 0.02 yaparsan daha hızlı)
+            VirtualInputManager:SendTouchEvent(pos.X, pos.Y, 1, false, 1)  -- Touch up
+        end)
+        
     else
         ToggleBtn.Text = "KAPALI ❌"
         ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-        if connection then connection:Disconnect() end
-    end
-end)
-
--- Auto Shoot Loop (HitPart Spam - Güncel Args)
-connection = RunService.Heartbeat:Connect(function()
-    if enabled then
-        local character = player.Character
-        if character then
-            local tool = character:FindFirstChildOfClass("Tool")
-            if tool and mouse.Target then
-                local targetPart = mouse.Target
-                local targetChar = targetPart.Parent
-                local targetHum = targetChar:FindFirstChild("Humanoid")
-                local targetPlr = Players:GetPlayerFromCharacter(targetChar)
-                
-                if targetHum and targetHum.Health > 0 and targetPlr and targetPlr.Team ~= team then
-                    -- Güncel args (headshot + high damage)
-                    local equipped = character:FindFirstChild("EquippedTool") and character.EquippedTool.Value or tool.Name
-                    local gun = tool -- veya character:FindFirstChild("Gun")
-                    
-                    local args = {
-                        targetPart,              -- [1] hit part (head için ideal)
-                        targetPart.Position,     -- [2] position
-                        equipped,                -- [3] weapon name
-                        100000,                  -- [4] high pen/damage
-                        gun,                     -- [5] gun object
-                        nil, nil,                -- [6],[7]
-                        8,                       -- [8] damage multiplier
-                        false, false,            -- [9],[10]
-                        targetPart.Position,     -- [11]
-                        math.random(10000,20000),-- [12] random
-                        Vector3.new(0,0,0)        -- [13]
-                    }
-                    
-                    HitPart:FireServer(unpack(args))
-                end
-            end
+        if connection then
+            connection:Disconnect()
+            connection = nil
         end
     end
 end)
 
--- Sürükleme (opsiyonel)
+-- Sürükleme
 local dragging, dragStart, startPos
 Frame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -132,4 +106,5 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ Auto Shoot (HitPart Spam) Yüklendi! Nişan al → Otomatik headshot spam!")
+print("✅ Mobil Auto Shoot Yüklendi! Path: PlayerGui.GUI.Main.Mobile.Shoot")
+print("AÇIK yap → Silah al, otomatik spam ateş eder (mobil touch simülasyonu)!")

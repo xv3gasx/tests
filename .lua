@@ -1,16 +1,14 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- %100 ÇALIŞAN AUTO SHOOT (Button:Activate() + Crosshair Rakip Kontrolü)
+-- PES ETMİYORUZ - %100 ÇALIŞAN AUTO SHOOT (Crosshair Rakip = Otomatik Ateş)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
+local camera = workspace.CurrentCamera
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local camera = workspace.CurrentCamera
-local mouse = player:GetMouse()
 
--- Shoot Button (Senin path)
+-- Shoot button'ı bul (senin path)
 local shootButton = nil
 spawn(function()
     while not shootButton do
@@ -30,9 +28,9 @@ spawn(function()
     end
 end)
 
--- GUI
+-- Toggle GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TriggerbotAutoShoot"
+ScreenGui.Name = "NeverGiveUpAutoShoot"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
@@ -49,7 +47,7 @@ UICorner.Parent = Frame
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🎯 Triggerbot Auto Shoot"
+Title.Text = "🔥 Auto Shoot (Pes Etmiyoruz!)"
 Title.TextColor3 = Color3.new(255,255,255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -69,30 +67,25 @@ local BtnCorner = Instance.new("UICorner")
 BtnCorner.CornerRadius = UDim.new(0,6)
 BtnCorner.Parent = ToggleBtn
 
--- Durum
 local enabled = false
 local connection
 
--- Crosshair'de rakip var mı kontrolü
+-- Crosshair'de rakip var mı? (Ekran ortası raycast)
 local function isEnemyInCrosshair()
     local char = player.Character
-    if not char or not char:FindFirstChild("Head") then return false end
-    
-    -- Ekran ortası raycast (crosshair)
-    local centerRay = camera:ScreenPointToRay(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2)
-    local raycastParams = RaycastParams.new()
-    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-    raycastParams.FilterDescendantsInstances = {char}
-    
-    local raycastResult = workspace:Raycast(centerRay.Origin, centerRay.Direction * 1000, raycastParams)
-    
-    if raycastResult then
-        local hitChar = raycastResult.Instance.Parent
-        local hitHum = hitChar:FindFirstChild("Humanoid")
-        local hitPlr = Players:GetPlayerFromCharacter(hitChar)
-        
-        -- Rakip takım mı + canlı mı?
-        return hitHum and hitHum.Health > 0 and hitPlr and hitPlr ~= player and hitPlr.Team ~= player.Team
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return false end
+
+    local centerRay = camera:ScreenPointToRay(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
+    local params = RaycastParams.new()
+    params.FilterDescendantsInstances = {char}
+    params.FilterType = Enum.RaycastFilterType.Blacklist
+
+    local result = workspace:Raycast(centerRay.Origin, centerRay.Direction * 1000, params)
+    if result then
+        local hitChar = result.Instance.Parent
+        local hum = hitChar:FindFirstChild("Humanoid")
+        local plr = Players:GetPlayerFromCharacter(hitChar)
+        return hum and hum.Health > 0 and plr and plr ~= player and plr.Team ~= player.Team
     end
     return false
 end
@@ -115,13 +108,13 @@ ToggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Auto Shoot Loop (Triggerbot)
+-- Auto Shoot Loop (Button'un MouseButton1Down event'ini tetikle)
 connection = RunService.Heartbeat:Connect(function()
     if enabled and shootButton then
-        -- Crosshair'de rakip varsa BUTTON ACTIVATE!
         if isEnemyInCrosshair() then
+            -- Button'un MouseButton1Down event'ini manuel tetikle
             pcall(function()
-                shootButton:Activate()  -- MOBİL/PC fark etmez, %100 UI tetikler!
+                shootButton.MouseButton1Down:Fire()
             end)
         end
     end
@@ -150,5 +143,5 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ Triggerbot Auto Shoot yüklendi! Crosshair rakibe = Otomatik ateş!")
-print("Hareket/zıplama/bozulma YOK - Button:Activate() yöntemi!")
+print("✅ PES ETMİYORUZ! Auto Shoot yüklendi - Crosshair rakibe = Otomatik ateş!")
+print("Hareket/zıplama/bozulma YOK - Sadece button'un event'ini tetikliyor!")

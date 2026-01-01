@@ -1,9 +1,9 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- KONTROLLER AZ BOZULUR + İKONLAR KAYBOLMAZ AUTO SHOOT (Hold Style)
+-- BUTTON:ACTIVATE() İLE AUTO SHOOT (Kontroller bozulmaz, ikonlar kalır!)
 
 local Players = game:GetService("Players")
-local VirtualInputManager = game:GetService("VirtualInputManager")
 local RunService = game:GetService("RunService")
+local camera = workspace.CurrentCamera
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -30,7 +30,7 @@ end)
 
 -- GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "HoldAutoShoot"
+ScreenGui.Name = "ActivateAutoShoot"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
@@ -43,7 +43,7 @@ Frame.Parent = ScreenGui
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔥 Hold Auto Shoot (Az Bozar)"
+Title.Text = "🔥 Auto Shoot (Button Activate)"
 Title.TextColor3 = Color3.new(255,255,255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -62,6 +62,27 @@ ToggleBtn.Parent = Frame
 local enabled = false
 local connection
 
+-- Crosshair rakip kontrol (isteğe bağlı, direkt spam istersen kaldır)
+local function isEnemyInCrosshair()
+    local char = player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return false end
+    
+    local centerRay = camera:ScreenPointToRay(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
+    local params = RaycastParams.new()
+    params.FilterDescendantsInstances = {char}
+    params.FilterType = Enum.RaycastFilterType.Blacklist
+    
+    local result = workspace:Raycast(centerRay.Origin, centerRay.Direction * 1000, params)
+    if result then
+        local hitChar = result.Instance.Parent
+        local hum = hitChar:FindFirstChild("Humanoid")
+        local plr = Players:GetPlayerFromCharacter(hitChar)
+        return hum and hum.Health > 0 and plr and plr ~= player and plr.Team ~= player.Team
+    end
+    return true  -- Direkt spam için true yap (crosshair kontrolü kaldırmak için)
+end
+
+-- Toggle
 ToggleBtn.MouseButton1Click:Connect(function()
     if not shootButton then
         print("Shoot button bekleniyor...")
@@ -70,25 +91,23 @@ ToggleBtn.MouseButton1Click:Connect(function()
     
     enabled = not enabled
     if enabled then
-        ToggleBtn.Text = "AÇIK (Hold Ateş)"
+        ToggleBtn.Text = "AÇIK ✅"
         ToggleBtn.BackgroundColor3 = Color3.new(50,200,50)
         
-        -- SADECE DOWN GÖNDER (UP YOK = ikonlar kaybolmaz, kontroller az bozulur)
+        -- Button:Activate() spam
         connection = RunService.Heartbeat:Connect(function()
-            local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
-            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 1)
+            pcall(function()
+                shootButton:Activate()  -- Direkt button tetikle!
+            end)
+            task.wait(0.03)  -- Ateş hızı (daha hızlı için 0.01 yap)
         end)
         
     else
-        ToggleBtn.Text = "KAPALI"
+        ToggleBtn.Text = "KAPALI ❌"
         ToggleBtn.BackgroundColor3 = Color3.new(200,50,50)
-        if connection then
-            connection:Disconnect()
-            -- Kapatırken son UP gönder (stuck kalmasın)
-            local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
-            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)
-        end
+        if connection then connection:Disconnect() end
     end
 end)
 
-print("✅ Hold Auto Shoot yüklendi! AÇIK = Sürekli hold ateş (ikonlar kalır)!")
+print("✅ Button:Activate() Auto Shoot yüklendi! Toggle AÇIK = Spam ateş!")
+print("Kontroller bozulmaz, ikonlar kalır - Roblox doğal yöntemi!")

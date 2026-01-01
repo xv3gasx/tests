@@ -24,7 +24,7 @@ end
 
 WindUI:Notify({
     Title = "discord.gg/kxYEUeARvA",
-    Content = "Click G for open menu",
+    Content = "Clir open menu",
     Duration = 3,
     Icon = "check"
 })

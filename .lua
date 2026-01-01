@@ -1,19 +1,15 @@
 -- LocalScript (StarterPlayer > StarterPlayerScripts içine koy)
--- %100 ÇALIŞAN MOBİL AUTO SHOOT (TAM SENİN PATH'İNE ÖZEL!)
--- Path: PlayerGui > GUI (ScreenGui) > Mobile (Frame) > Shoot (ImageButton)
+-- HAREKETLERİ BOZMAYAN MOBİL AUTO SHOOT (Final Versiyon)
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- TAM SENİN PATH'İN (Main yok, Mobile direkt GUI altında)
+-- Shoot button'ı bul (senin path)
 local shootButton = nil
-
--- Shoot button'ı güvenli şekilde bul (spawn olana kadar bekle, crash YOK)
 spawn(function()
     while not shootButton do
         local gui = playerGui:FindFirstChild("GUI")
@@ -23,18 +19,18 @@ spawn(function()
                 local shoot = mobile:FindFirstChild("Shoot")
                 if shoot and shoot:IsA("ImageButton") then
                     shootButton = shoot
-                    print("🔥 SHOOT BUTTON BULUNDU:", shootButton:GetFullName())
+                    print("Shoot button bulundu:", shootButton:GetFullName())
                     break
                 end
             end
         end
-        task.wait(1)  -- 1 saniyede bir kontrol et (FPS drop sıfır)
+        task.wait(1)
     end
 end)
 
--- Sade GUI Toggle
+-- Toggle GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "MobileAutoShootFinal"
+ScreenGui.Name = "SafeAutoShoot"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = playerGui
 
@@ -42,18 +38,13 @@ local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 260, 0, 80)
 Frame.Position = UDim2.new(0, 20, 0.8, 0)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
-
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 8)
-UICorner.Parent = Frame
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.4, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "📱 Auto Shoot (Final)"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Text = "📱 Auto Shoot (Hareket Bozulmaz)"
+Title.TextColor3 = Color3.new(1,1,1)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
 Title.Parent = Frame
@@ -61,49 +52,44 @@ Title.Parent = Frame
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0.9, 0, 0.5, 0)
 ToggleBtn.Position = UDim2.new(0.05, 0, 0.5, 0)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-ToggleBtn.Text = "KAPALI (Bekleniyor...)"
-ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.BackgroundColor3 = Color3.new(1,0,0)
+ToggleBtn.Text = "KAPALI"
+ToggleBtn.TextColor3 = Color3.new(1,1,1)
 ToggleBtn.Font = Enum.Font.GothamBold
-ToggleBtn.TextSize = 18
+ToggleBtn.TextSize = 20
 ToggleBtn.Parent = Frame
 
-local BtnCorner = Instance.new("UICorner")
-BtnCorner.CornerRadius = UDim.new(0, 6)
-BtnCorner.Parent = ToggleBtn
-
--- Durum
 local enabled = false
 local connection
 
--- Toggle
 ToggleBtn.MouseButton1Click:Connect(function()
     if not shootButton then
-        ToggleBtn.Text = "Button Henüz Yok!"
-        task.wait(1)
-        ToggleBtn.Text = "KAPALI (Bekleniyor...)"
+        print("Shoot button henüz yüklenmedi, silah al bekle.")
         return
     end
-    
+
     enabled = not enabled
     if enabled then
         ToggleBtn.Text = "AÇIK ✅"
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-        
-        -- Auto Shoot: Shoot ImageButton ortasına sürekli tıkla
+        ToggleBtn.BackgroundColor3 = Color3.new(0,1,0)
+
+        -- HAREKET BOZULMASIN DİYE: Sadece "down" gönder, "up" gönderme!
+        -- Roblox mobil button'ları "down" ile ateş eder, "up" göndermezsen nişan/hareket bozulmaz
         connection = RunService.Heartbeat:Connect(function()
             local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
-            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 1)   -- Down
-            task.wait(0.04)  -- Hızlı ama stabil ateş (değiştirilebilir)
-            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)  -- Up
+            -- Sadece DOWN gönder (up gönderme = hareket bozulmaz!)
+            VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 1)
         end)
-        
     else
         ToggleBtn.Text = "KAPALI"
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+        ToggleBtn.BackgroundColor3 = Color3.new(1,0,0)
         if connection then
             connection:Disconnect()
-            connection = nil
+            -- Güvenli çıkış: son bir up gönder (stuck olmasın)
+            if shootButton then
+                local pos = shootButton.AbsolutePosition + shootButton.AbsoluteSize / 2
+                VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)
+            end
         end
     end
 end)
@@ -131,5 +117,4 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ Final Auto Shoot Yüklendi! Path: PlayerGui.GUI.Mobile.Shoot")
-print("Mobil GUI çıkınca otomatik bulur ve hazır olur.")
+print("✅ Hareketleri bozmayan Auto Shoot yüklendi! AÇIK yap → Yürüyüp nişan alırken bile ateş eder!")

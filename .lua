@@ -56,7 +56,6 @@ local ESP_Tab     = Window:Tab({Title="ESP",    Icon="eye"})
 local Aim_Tab     = Window:Tab({Title="Aim",    Icon="target"})
 local Weapon_Tab  = Window:Tab({Title="Weapon", Icon="crosshair"})
 local Keybind_Tab = Window:Tab({Title="Keybind",Icon="keyboard"})
-local Visual_Tab = Window:Tab({Title = "Visual",Icon = "eye"})
 
 -- =====================================================
 -- SERVICES
@@ -67,7 +66,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 local WeaponsFolder = ReplicatedStorage:FindFirstChild("Weapons")
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- =====================================================
 -- GLOBALS
@@ -78,13 +76,13 @@ _G.ESP_BOX = false
 _G.ESP_NAME = false
 _G.ESP_HEALTH = false
 _G.ESP_HIGHLIGHT = false
+
 _G.SILENT_AIM = false
 _G.AIM_FOV = 150
 _G.AIM_VISIBLE = true
+
 _G.NO_RECOIL = false
 _G.NO_SPREAD = false
-_G.REMOVE_SMOKE = false
-_G.ANTI_FLASH = false
 
 -- =====================================================
 -- DRAWING HELPER
@@ -104,39 +102,35 @@ ESP_Tab:Toggle({Title="Box ESP", Callback=function(v) _G.ESP_BOX=v end})
 ESP_Tab:Toggle({Title="NameTag ESP", Callback=function(v) _G.ESP_NAME=v end})
 ESP_Tab:Toggle({Title="Health ESP", Callback=function(v) _G.ESP_HEALTH=v end})
 ESP_Tab:Toggle({Title="Highlight ESP", Callback=function(v) _G.ESP_HIGHLIGHT=v end})
+
 Aim_Tab:Toggle({Title="Silent Aim", Callback=function(v) _G.SILENT_AIM=v end})
-Aim_Tab:Slider({Title="Aim FOV",Step=5,Value={Min=50,Max=500,Default=150},Callback=function(v) _G.AIM_FOV=v end})
-Aim_Tab:Toggle({Title="Visibility Check",Default=true,Callback=function(v) _G.AIM_VISIBLE=v end})
-Weapon_Tab:Toggle({Title="No Recoil (Safe)",Callback=function(v) _G.NO_RECOIL=v end})
-Weapon_Tab:Toggle({Title="No Spread",Callback=function(v) _G.NO_SPREAD=v end})
+Aim_Tab:Slider({
+    Title="Aim FOV",
+    Step=5,
+    Value={Min=50,Max=500,Default=150},
+    Callback=function(v) _G.AIM_FOV=v end
+})
+Aim_Tab:Toggle({
+    Title="Visibility Check",
+    Default=true,
+    Callback=function(v) _G.AIM_VISIBLE=v end
+})
+
+Weapon_Tab:Toggle({
+    Title="No Recoil (Safe)",
+    Callback=function(v) _G.NO_RECOIL=v end
+})
+Weapon_Tab:Toggle({
+    Title="No Spread",
+    Callback=function(v) _G.NO_SPREAD=v end
+})
+
 Keybind_Tab:Keybind({
     Title="Toggle UI",
     Desc="Open menu",
     Value="G",
     Callback=function(v)
         Window:SetToggleKey(Enum.KeyCode[v])
-    end
-})
-Visual_Tab:Toggle({
-    Title = "Remove Smoke",
-    Callback = function(v)
-        _G.REMOVE_SMOKE = v
-        if v then
-            enableNoSmoke()
-        else
-            disableNoSmoke()
-        end
-    end
-})
-Visual_Tab:Toggle({
-    Title = "Anti Flashbang",
-    Callback = function(v)
-        _G.ANTI_FLASH = v
-        if v then
-            enableAntiFlash()
-        else
-            disableAntiFlash()
-        end
     end
 })
 
@@ -374,69 +368,3 @@ RunService.RenderStepped:Connect(function()
         applyNoRecoil()
     end
 end)
-
-local smokeConn
-local particleConn
-
-local function disableParticle(obj)
-    if obj:IsA("ParticleEmitter") then
-        obj.Enabled = false
-        obj.Rate = 0
-    elseif obj.Name == "Smoke" or obj.Name == "Fire" then
-        pcall(function() obj:Destroy() end)
-    end
-end
-
-local function enableNoSmoke()
-    local rayIgnore = Workspace:FindFirstChild("Ray_Ignore")
-    if rayIgnore then
-        local smokes = rayIgnore:FindFirstChild("Smokes")
-        if smokes then
-            -- mevcutları TEK SEFER sil
-            for _, v in pairs(smokes:GetChildren()) do
-                v:Destroy()
-            end
-
-            smokeConn = smokes.ChildAdded:Connect(function(child)
-                if _G.REMOVE_SMOKE then
-                    task.wait()
-                    child:Destroy()
-                end
-            end)
-        end
-    end
-
-    particleConn = Workspace.DescendantAdded:Connect(function(obj)
-        if _G.REMOVE_SMOKE then
-            disableParticle(obj)
-        end
-    end)
-end
-
-local function disableNoSmoke()
-    if smokeConn then smokeConn:Disconnect() smokeConn = nil end
-    if particleConn then particleConn:Disconnect() particleConn = nil end
-end
-
-
-local blindConn
-
-local function enableAntiFlash()
-    local blnd = PlayerGui:FindFirstChild("Blnd")
-    if blnd then
-        blnd.Enabled = false
-
-        local blindFrame = blnd:FindFirstChild("Blind")
-        if blindFrame then
-            blindConn = blindFrame.Changed:Connect(function()
-                if _G.ANTI_FLASH then
-                    blnd.Enabled = false
-                end
-            end)
-        end
-    end
-end
-
-local function disableAntiFlash()
-    if blindConn then blindConn:Disconnect() blindConn = nil end
-end

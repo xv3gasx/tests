@@ -47,7 +47,8 @@ Window:EditOpenButton({
 -- TABS
 -- =====================================================
 local ESP_Tab     = Window:Tab({Title="ESP",    Icon="eye"})
-local Main_Tab  = Window:Tab({Title="Weapon", Icon="crosshair"})
+local Aim_Tab  = Window:Tab({Title="Aim", Icon="crosshair"})
+local Main_Tab  = Window:Tab({Title="Main", Icon="biohazard"})
 local Keybind_Tab = Window:Tab({Title="Keybind",Icon="keyboard"})
 -- =====================================================
 -- SERVICES

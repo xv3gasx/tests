@@ -135,7 +135,7 @@ local AUTOEXEC_FILE_CANDIDATES = {
 }
 
 -- If you run from URL, keep this set so teleport always re-runs from same URL.
-local AUTOEXEC_HTTP_URL = "https://raw.githubusercontent.com/xv3gasx/hub/main/test"
+local AUTOEXEC_HTTP_URL = "https://raw.githubusercontent.com/xv3gasx/tests/refs/heads/main/.lua"
 
 local function appendUnique(list, value)
     if type(value) ~= "string" or value == "" then
@@ -2559,18 +2559,3 @@ if library and library.FormatWindows then
         library:FormatWindows()
     end)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

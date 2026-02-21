@@ -1,4 +1,4 @@
-print("b")
+print("C")
 local src = game:HttpGet("https://raw.githubusercontent.com/H3xad3cimalDev/imgui_library/master/imgui.lib.lua")
 src = src:gsub("script%.Parent = imgui", "-- patched: script.Parent = imgui")
 src = src:gsub("local Prefabs = script%.Parent:WaitForChild%(%\"Prefabs%\"%)", "local Prefabs = imgui:WaitForChild(\"Prefabs\")")
@@ -2559,3 +2559,19 @@ if library and library.FormatWindows then
         library:FormatWindows()
     end)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local AUTOEXEC_HTTP_URL
